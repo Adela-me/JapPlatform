@@ -14,9 +14,4 @@ export const tableData = [
     prop: "successRate",
     type: "text",
   },
-  {
-    header: "OverallSuccessRate",
-    prop: "overallSuccessRate",
-    type: "text",
-  },
 ];

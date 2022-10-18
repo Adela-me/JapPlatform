@@ -11,5 +11,18 @@ const getReport = async () => {
 export default function useReport() {
   return useQuery(["profile"], () => getReport(), {
     refetchOnWindowFocus: false,
+    select: (report) => {
+      return {
+        overallSuccessRate: report.overallSuccessRate?.toFixed(2) + "%",
+        selectionSuccessRate: report.selectionSuccessRate.map((r) => {
+          return {
+            id: r.id,
+            selectionName: r.selectionName,
+            programName: r.programName,
+            successRate: r.successRate?.toFixed(2) + "%",
+          };
+        }),
+      };
+    },
   });
 }
