@@ -1,0 +1,12 @@
+const baseURL = "/api";
+export const urlPrograms = `${baseURL}/programs`;
+export const urlSelections = `${baseURL}/selections`;
+export const urlAddStudent = `${baseURL}/selections/addstudent`;
+export const urlRemoveStudent = `${baseURL}/selections/removestudent`;
+export const urlStudents = `${baseURL}/students`;
+export const urlProfile = `${urlStudents}/profile`;
+export const urlComments = `${baseURL}/comments`;
+export const urlLogin = `${baseURL}/auth/login`;
+export const urlLogout = `${baseURL}/auth/logout`;
+export const urlUser = `${baseURL}/users/current`;
+export const urlReport = `${baseURL}/admins/report`;
