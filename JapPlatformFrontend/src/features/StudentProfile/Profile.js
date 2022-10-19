@@ -12,8 +12,7 @@ const Profile = () => {
       <h3 className="text-center my-5">
         Student Profile: {data?.firstName} {data?.lastName}
       </h3>
-
-      <Accordion defaultActiveKey="0">
+      <Accordion defaultActiveKey={["0"]} alwaysOpen>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Personal Info</Accordion.Header>
           <Accordion.Body>
