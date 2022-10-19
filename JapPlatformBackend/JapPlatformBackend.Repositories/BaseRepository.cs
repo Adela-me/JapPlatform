@@ -2,6 +2,7 @@
 using JapPlatformBackend.Api.Exceptions;
 using JapPlatformBackend.Common;
 using JapPlatformBackend.Common.Response;
+using JapPlatformBackend.Core.Entities.Base;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
 using Microsoft.EntityFrameworkCore;
@@ -80,10 +81,12 @@ namespace JapPlatformBackend.Repositories
 
         public virtual async Task<TDto> Update(int id, TUpdate entity)
         {
-            var dbEntity = await context.Set<TEntity>().FindAsync(id)
+            var dbEntity = await context.Set<TEntity>().FindAsync(id) as AuditableEntity
                ?? throw new ResourceNotFound(typeof(TEntity).Name);
 
             dbEntity = mapper.Map(entity, dbEntity);
+
+            dbEntity.ModifiedAt = DateTime.Now;
 
             await context.SaveChangesAsync();
 

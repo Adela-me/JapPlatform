@@ -47,6 +47,8 @@ namespace JapPlatformBackend.Repositories
 
             student = mapper.Map(updatedStudent, student);
 
+            student.ModifiedAt = DateTime.Now;
+
             await context.SaveChangesAsync();
 
             return mapper.Map<GetStudentDto>(student);

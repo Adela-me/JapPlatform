@@ -54,6 +54,8 @@ namespace JapPlatformBackend.Repositories
 
             selection = mapper.Map(updatedSelection, selection);
 
+            selection.ModifiedAt = DateTime.Now;
+
             await context.SaveChangesAsync();
 
             return mapper.Map<GetSelectionDto>(selection);
@@ -71,6 +73,9 @@ namespace JapPlatformBackend.Repositories
 
             // Allowing students to be added even if they are already in some other selection
             // There is no warning if student is already in this selection
+
+            selection.ModifiedAt = DateTime.Now;
+            student.ModifiedAt = DateTime.Now;
 
             selection.Students.Add(student);
             await context.SaveChangesAsync();
@@ -90,6 +95,9 @@ namespace JapPlatformBackend.Repositories
                 ?? throw new ResourceNotFound("Selection");
 
             // Allows to delete last student, leaving selection with no students
+
+            selection.ModifiedAt = DateTime.Now;
+            student.ModifiedAt = DateTime.Now;
 
             selection.Students.Remove(student);
             await context.SaveChangesAsync();
