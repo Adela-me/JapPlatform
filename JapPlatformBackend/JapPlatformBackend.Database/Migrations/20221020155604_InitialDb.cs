@@ -25,13 +25,34 @@ namespace JapPlatformBackend.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Items",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WorkHours = table.Column<int>(type: "int", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Urls = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Items", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Programs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,6 +76,33 @@ namespace JapPlatformBackend.Database.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemPrograms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderNumber = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    ItemId = table.Column<int>(type: "int", nullable: false),
+                    ProgramId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemPrograms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemPrograms_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItemPrograms_Programs_ProgramId",
+                        column: x => x.ProgramId,
+                        principalTable: "Programs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -235,28 +283,65 @@ namespace JapPlatformBackend.Database.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "ItemProgramStudents",
+                columns: table => new
+                {
+                    ItemProgramId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Progress = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
+                    ProgressStatus = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemProgramStudents", x => new { x.ItemProgramId, x.StudentId });
+                    table.ForeignKey(
+                        name: "FK_ItemProgramStudents_AspNetUsers_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ItemProgramStudents_ItemPrograms_ItemProgramId",
+                        column: x => x.ItemProgramId,
+                        principalTable: "ItemPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "2a20171f-e516-4411-b493-50acf2d8b425", "Admin", "ADMIN" },
-                    { 2, "44aa65a8-7826-4e02-a14f-b0c8be0aac11", "Student", "STUDENT" }
+                    { 1, "92ed1e27-3ae7-4295-bbbe-ff96f54e742e", "Admin", "ADMIN" },
+                    { 2, "ebfed8ab-d6f3-4eec-9220-8a0a746b6932", "Student", "STUDENT" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, null, "5216ac0f-6432-42af-910b-590af5143102", "User", "mail@mail.com", false, "Admin", "Admin", false, null, null, null, "AQAAAAEAACcQAAAAEJDmi/fvWGj86JFpXNvbqxsROXXpBJjscHv2CmSiALHC4akqiKbvt9Hzl7MJ1FV4RA==", null, false, null, false, "admin" });
+                values: new object[] { 1, 0, null, "365f9886-8e60-4139-8aa8-b9e6ac5b9e95", "User", "mail@mail.com", false, "Admin", "Admin", false, null, null, null, "AQAAAAEAACcQAAAAEMtq7HoJ2U//2AAyjP+Hjm70FbuSYZ9rnapJxT5FRV7u8y+blFAbxcoj3HkNN+1JgQ==", null, false, null, false, "admin" });
+
+            migrationBuilder.InsertData(
+                table: "Items",
+                columns: new[] { "Id", "CreatedAt", "Description", "Discriminator", "ModifiedAt", "Name", "Urls", "WorkHours" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9321), "Description of the React Course", "Lecture", new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9324), "React Course", "udemy.com", 0 },
+                    { 2, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9327), ".Net Course Description", "Lecture", new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9328), ".Net Course", "udemy.com", 0 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Programs",
-                columns: new[] { "Id", "Description", "Name" },
+                columns: new[] { "Id", "CreatedAt", "Description", "ModifiedAt", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Dev JAP is a 9-week program designed to prepare you for a full-time client engagement where you would work as a Junior Software Developer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", "JAP Dev" },
-                    { 2, "QA JAP is a 5-week program designed to prepare you for a full-time client engagement where you would work as a Junior Quality Assurance engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", "JAP QA" },
-                    { 3, "DevOps JAP is a 13-week program designed to prepare you for a full-time client engagement where you would work as a Junior DevOps engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", "JAP DevOps" }
+                    { 1, new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(823), "Dev JAP is a 9-week program designed to prepare you for a full-time client engagement where you would work as a Junior Software Developer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(856), "JAP Dev" },
+                    { 2, new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(861), "QA JAP is a 5-week program designed to prepare you for a full-time client engagement where you would work as a Junior Quality Assurance engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(863), "JAP QA" },
+                    { 3, new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(865), "DevOps JAP is a 13-week program designed to prepare you for a full-time client engagement where you would work as a Junior DevOps engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(866), "JAP DevOps" }
                 });
 
             migrationBuilder.InsertData(
@@ -265,13 +350,22 @@ namespace JapPlatformBackend.Database.Migrations
                 values: new object[] { 1, 1 });
 
             migrationBuilder.InsertData(
+                table: "ItemPrograms",
+                columns: new[] { "Id", "ItemId", "OrderNumber", "ProgramId" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 1 },
+                    { 2, 2, 2, 1 }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Selections",
                 columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "ProgramId", "StartDate", "Status" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8657), new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8684), "JAP Dev 09/2022", 1, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 2, new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8689), new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8691), "JAP QA 09/2022", 2, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 3, new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8693), new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8694), "JAP DevOps 09/2022", 3, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 }
+                    { 1, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9130), new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9153), "JAP Dev 09/2022", 1, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 2, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9158), new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9160), "JAP QA 09/2022", 2, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 3, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9162), new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9164), "JAP DevOps 09/2022", 3, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -279,12 +373,12 @@ namespace JapPlatformBackend.Database.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SelectionId", "Status", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 2, 0, new DateTime(1994, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "5c6cc880-d29d-4862-8ba2-b2663a096d13", "Student", "mail@mail.com", false, "John", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEHrswnDsjKD9H2TTpFxr6hmmgWlJze+O44n8XyK+xYF2TxrJ+9qPGWDwQgyfu3nReQ==", null, false, null, 1, 0, false, "john" },
-                    { 3, 0, new DateTime(1998, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "083c4f20-c464-4f73-bb73-d433d536b1c4", "Student", "mail@mail.com", false, "Jane", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEBUeZxH0QLmuSpoQ4irvnpHTxVpKCcBGNqFquQz8i+DxSTEdTkGCdV0oovRF76YnIg==", null, false, null, 1, 1, false, "jane" },
-                    { 4, 0, new DateTime(1993, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "842d77da-ea0b-434e-85e4-89e0791f2c17", "Student", "mail@mail.com", false, "Jessica", "Jones", false, null, null, null, "AQAAAAEAACcQAAAAEJBAqAY/ScjHd2YPdXT+DelIgQBM7HPQYXQKC372dd1VeHjs0ea5XMA5jYrTUWleYA==", null, false, null, 2, 3, false, "jessica" },
-                    { 5, 0, new DateTime(2001, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "adb41fa9-8b3d-489e-b087-5e861afa4042", "Student", "mail@mail.com", false, "Bruce", "Wayne", false, null, null, null, "AQAAAAEAACcQAAAAEPaaRoQrScm6mc5fJUlxhLkDfHQq78KR1d3TpETXoYBhIfwJ7gxGPbW0nx6pPw4NTg==", null, false, null, 2, 1, false, "bruce" },
-                    { 6, 0, new DateTime(1990, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "d24c9a6e-f040-4e8a-9064-8082c065fe11", "Student", "mail@mail.com", false, "Matt", "Murdock", false, null, null, null, "AQAAAAEAACcQAAAAEK+JgLwkeNsA+nHudmLmjxGPatnvin0GBtcVOGQiINYErUyDvr/43jvajvIHz0q7eg==", null, false, null, 2, 1, false, "matt" },
-                    { 7, 0, new DateTime(1985, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "21d5e92f-f052-4cc7-96d7-57cebfed6562", "Student", "mail@mail.com", false, "Tony", "Stark", false, null, null, null, "AQAAAAEAACcQAAAAEBV+/38YDeEMwaarznrZqB7ZxeVsRHmDoB3GaAohXQghQmfaxyLUN9303Gca2+Q1hw==", null, false, null, 3, 2, false, "tony" }
+                    { 2, 0, new DateTime(1994, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "e229b45d-ec79-4b3e-9f6f-a523600e80d5", "Student", "mail@mail.com", false, "John", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEMsQaxYlXBSEMLlDAvOA7X5QpVcJq8Ukggle46760aNRCHSHvzGmEz1RIZtu05BcUA==", null, false, null, 1, 0, false, "john" },
+                    { 3, 0, new DateTime(1998, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "781826a1-d3e5-4290-9af8-f337d1deb5aa", "Student", "mail@mail.com", false, "Jane", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEC7y0GE2wJpzZSjzlcbELo0JepceMjpDhlJTtAE4scVQ0DjHf1tfgDqTB1u0LoCXkQ==", null, false, null, 1, 1, false, "jane" },
+                    { 4, 0, new DateTime(1993, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "90bc3698-0a10-43e5-87a8-2edb865086c8", "Student", "mail@mail.com", false, "Jessica", "Jones", false, null, null, null, "AQAAAAEAACcQAAAAEHUE6VxWtj9A/dCMpA8g/6tJzwbx7IWPVbeHBov+U7XIu3TPmJmIZlALc5AeaVjJeQ==", null, false, null, 2, 3, false, "jessica" },
+                    { 5, 0, new DateTime(2001, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "8babbc7c-ebbf-4106-8dd3-eda5a5bb4d0c", "Student", "mail@mail.com", false, "Bruce", "Wayne", false, null, null, null, "AQAAAAEAACcQAAAAEPZwjwJFZkAHPxtoAcXhV8Y83dF+8e1RHaoUFRoZRUkv7CsmNIRZ24ASjf3Fpcdo9w==", null, false, null, 2, 1, false, "bruce" },
+                    { 6, 0, new DateTime(1990, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "c1ae5eb8-a32d-4704-803a-b69465790b0f", "Student", "mail@mail.com", false, "Matt", "Murdock", false, null, null, null, "AQAAAAEAACcQAAAAEDzZyHpV84aGo2+xWG7YgKT9sJa9r0gj7TR8tCkiVuMaECHhj/Qwa7najMzxuUGACQ==", null, false, null, 2, 1, false, "matt" },
+                    { 7, 0, new DateTime(1985, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "25e551be-c438-48cd-810b-9be587e055c0", "Student", "mail@mail.com", false, "Tony", "Stark", false, null, null, null, "AQAAAAEAACcQAAAAEM/4nFV7Wlz+ytmIYJDPFQx8STLHqOrnekhcZdTa6Wj45jvnlN5wdIcZ1PmPcPyglQ==", null, false, null, 3, 2, false, "tony" }
                 });
 
             migrationBuilder.InsertData(
@@ -355,6 +449,21 @@ namespace JapPlatformBackend.Database.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ItemPrograms_ItemId",
+                table: "ItemPrograms",
+                column: "ItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemPrograms_ProgramId",
+                table: "ItemPrograms",
+                column: "ProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemProgramStudents_StudentId",
+                table: "ItemProgramStudents",
+                column: "StudentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Selections_ProgramId",
                 table: "Selections",
                 column: "ProgramId");
@@ -381,13 +490,22 @@ namespace JapPlatformBackend.Database.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
+                name: "ItemProgramStudents");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "ItemPrograms");
+
+            migrationBuilder.DropTable(
                 name: "Selections");
+
+            migrationBuilder.DropTable(
+                name: "Items");
 
             migrationBuilder.DropTable(
                 name: "Programs");

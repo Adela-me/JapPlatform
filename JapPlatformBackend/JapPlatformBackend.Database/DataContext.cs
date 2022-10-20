@@ -1,5 +1,6 @@
 ﻿using JapPlatformBackend.Core.Dtos.Admin;
 using JapPlatformBackend.Core.Entities;
+using JapPlatformBackend.Core.Entities.Base;
 using JapPlatformBackend.Database.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,6 +21,10 @@ namespace JapPlatformBackend.Database
         public DbSet<Program> Programs { get; set; } = null!;
         public DbSet<Selection> Selections { get; set; } = null!;
         public DbSet<Comment> Comments { get; set; } = null!;
+        public DbSet<Item> Items { get; set; } = null!;
+        public DbSet<Lecture> Lectures { get; set; } = null!;
+        public DbSet<ItemProgram> ItemPrograms { get; set; } = null!;
+        public DbSet<ItemProgramStudent> ItemProgramStudents { get; set; } = null!;
         public DbSet<GetSelectionsSuccess> GetSelectionsSuccess { get; set; } = null!;
         public DbSet<GetOverallSuccess> GetOverallSuccess { get; set; } = null!;
 
@@ -28,6 +33,13 @@ namespace JapPlatformBackend.Database
         {
             base.OnModelCreating(modelBuilder);
 
+            //modelBuilder.Entity<Lecture>()
+            //.Property(e => e.Urls)
+            //.HasConversion(
+            //    v => string.Join(',', v),
+            //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+
             // Adding DB configurations and seed
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
@@ -35,6 +47,9 @@ namespace JapPlatformBackend.Database
             modelBuilder.ApplyConfiguration(new ProgramConfiguration());
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
             modelBuilder.ApplyConfiguration(new SelectionConfiguration());
+            modelBuilder.ApplyConfiguration(new LectureConfiguration());
+            modelBuilder.ApplyConfiguration(new ItemProgramConfiguration());
+
             modelBuilder.ApplyConfiguration(new GetSelectionsSuccessConfiguration());
             modelBuilder.ApplyConfiguration(new GetOverallSuccessConfiguration());
         }

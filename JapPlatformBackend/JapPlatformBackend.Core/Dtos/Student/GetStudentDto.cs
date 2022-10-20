@@ -1,6 +1,5 @@
 ﻿using JapPlatformBackend.Common.Enums;
 using JapPlatformBackend.Core.Dtos.Comment;
-using JapPlatformBackend.Core.Dtos.Selection;
 using JapPlatformBackend.Core.Dtos.UserRole;
 
 namespace JapPlatformBackend.Core.Dtos.Student
@@ -14,9 +13,11 @@ namespace JapPlatformBackend.Core.Dtos.Student
         public string Email { get; set; } = string.Empty;
         public DateTime BirthDate { get; set; }
         public StudentStatus Status { get; set; }
-        public GetSelectionDto? Selection { get; set; }
+        public string? Selection { get; set; }
+        public string? Program { get; set; }
         public List<GetCommentDto> Comments { get; set; } = new();
         public ICollection<UserRoleDto> UserRoles { get; set; }
+        public List<ItemProgramStudentDto> ItemProgramStudents { get; set; } = new();
 
     }
 }

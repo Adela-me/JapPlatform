@@ -20,19 +20,6 @@ namespace JapPlatformBackend.Repositories
             this.mapper = mapper;
         }
 
-        public async Task<GetStudentDto> GetProfile(int studentId)
-        {
-            var student = await context.Students
-                .Include(s => s.Comments.OrderByDescending(c => c.CreatedAt))
-                    .ThenInclude(c => c.Author)
-                .Include(s => s.Selection)
-                    .ThenInclude(s => s.Program)
-                .FirstOrDefaultAsync(s => s.Id == studentId)
-                ?? throw new ResourceNotFound("Student");
-
-            return mapper.Map<GetStudentDto>(student);
-        }
-
         public override async Task<GetStudentDto> Update(int id, UpdateStudentDto updatedStudent)
         {
             var student = await context.Students

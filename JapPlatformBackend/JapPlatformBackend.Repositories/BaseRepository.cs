@@ -68,11 +68,12 @@ namespace JapPlatformBackend.Repositories
             return await query.Select(q => mapper.Map<TDto>(q)).ToListAsync();
 
         }
+
         public virtual async Task<TDto> Create(TInsert entity)
         {
             var insert = mapper.Map<TEntity>(entity);
 
-            context.Set<TEntity>().Add(insert as TEntity);
+            context.Set<TEntity>().Add(insert);
 
             await context.SaveChangesAsync();
 

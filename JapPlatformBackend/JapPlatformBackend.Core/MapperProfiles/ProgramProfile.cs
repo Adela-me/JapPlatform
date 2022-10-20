@@ -8,7 +8,11 @@ namespace JapPlatformBackend.Core.MapperProfiles
     {
         public ProgramProfile()
         {
-            CreateMap<Program, GetProgramDto>();
+            CreateMap<Program, GetProgramDto>()
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.ItemPrograms))
+                .ReverseMap();
+            CreateMap<Program, CreateProgramDto>().ReverseMap();
+            CreateMap<Program, UpdateProgramDto>().ReverseMap();
         }
     }
 }

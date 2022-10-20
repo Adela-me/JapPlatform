@@ -90,7 +90,7 @@ namespace JapPlatformBackend.Services
 
         public async Task<ServiceResponse<GetStudentDto>> GetById(int id)
         {
-            var includes = "Comments.Author, Selection.Program";
+            var includes = "Comments.Author, Selection.Program, ItemProgramStudents.ItemProgram.Item";
 
             var response = new ServiceResponse<GetStudentDto>
             {
@@ -103,9 +103,11 @@ namespace JapPlatformBackend.Services
         {
             int studentId = UserHelpers.GetLoggedInUserId(httpContextAccessor);
 
+            var includes = "Comments.Author, Selection.Program, ItemProgramStudents.ItemProgram.Item";
+
             var response = new ServiceResponse<GetStudentDto>
             {
-                Data = await studentRepository.GetProfile(studentId)
+                Data = await studentRepository.GetById(studentId, includes)
             };
             return response;
         }

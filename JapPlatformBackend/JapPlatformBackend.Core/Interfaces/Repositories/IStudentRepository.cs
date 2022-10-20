@@ -7,8 +7,6 @@ namespace JapPlatformBackend.Core.Interfaces.Repositories
     public interface IStudentRepository : IBaseRepository<Student, CreateStudentDto,
         UpdateStudentDto, GetStudentDto>
     {
-        Task<GetStudentDto> GetProfile(int studentId);
-
         Task<GetStudentDto> AddComment(int authorId, CreateCommentDto newComment);
     }
 }

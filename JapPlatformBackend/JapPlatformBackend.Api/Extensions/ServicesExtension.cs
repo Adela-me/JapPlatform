@@ -16,10 +16,14 @@ namespace JapPlatformBackend.Api.Extensions
             service.AddScoped<IUserService, UserService>();
             service.AddScoped<IAdminService, AdminService>();
             service.AddTransient<IMailService, MailService>();
+            //     service.AddTransient<IItemService, ItemService>();
+            service.AddTransient<ILectureService, LectureService>();
 
             service.AddTransient<ISelectionRepository, SelectionRepository>();
             service.AddTransient<IStudentRepository, StudentRepository>();
             service.AddTransient<IProgramRepository, ProgramRepository>();
+            service.AddTransient<IItemRepository, ItemRepository>();
+            service.AddTransient<ILectureRepository, LectureRepository>();
         }
     }
 }

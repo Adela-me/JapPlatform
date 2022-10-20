@@ -49,6 +49,38 @@ namespace JapPlatformBackend.Database.Migrations
                     b.ToTable("GetSelectionsSuccess", null, t => t.ExcludeFromMigrations());
                 });
 
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.Base.Item", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WorkHours")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Item");
+                });
+
             modelBuilder.Entity("JapPlatformBackend.Core.Entities.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -82,6 +114,81 @@ namespace JapPlatformBackend.Database.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.ItemProgram", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<int>("ProgramId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("ProgramId");
+
+                    b.ToTable("ItemPrograms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ItemId = 1,
+                            OrderNumber = 1,
+                            ProgramId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ItemId = 2,
+                            OrderNumber = 2,
+                            ProgramId = 1
+                        });
+                });
+
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.ItemProgramStudent", b =>
+                {
+                    b.Property<int>("ItemProgramId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<double>("Progress")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
+
+                    b.Property<int>("ProgressStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ItemProgramId", "StudentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("ItemProgramStudents");
+                });
+
             modelBuilder.Entity("JapPlatformBackend.Core.Entities.Program", b =>
                 {
                     b.Property<int>("Id")
@@ -90,9 +197,15 @@ namespace JapPlatformBackend.Database.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -106,19 +219,25 @@ namespace JapPlatformBackend.Database.Migrations
                         new
                         {
                             Id = 1,
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(823),
                             Description = "Dev JAP is a 9-week program designed to prepare you for a full-time client engagement where you would work as a Junior Software Developer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.",
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(856),
                             Name = "JAP Dev"
                         },
                         new
                         {
                             Id = 2,
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(861),
                             Description = "QA JAP is a 5-week program designed to prepare you for a full-time client engagement where you would work as a Junior Quality Assurance engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.",
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(863),
                             Name = "JAP QA"
                         },
                         new
                         {
                             Id = 3,
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(865),
                             Description = "DevOps JAP is a 13-week program designed to prepare you for a full-time client engagement where you would work as a Junior DevOps engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.",
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(866),
                             Name = "JAP DevOps"
                         });
                 });
@@ -156,14 +275,14 @@ namespace JapPlatformBackend.Database.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "2a20171f-e516-4411-b493-50acf2d8b425",
+                            ConcurrencyStamp = "92ed1e27-3ae7-4295-bbbe-ff96f54e742e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "44aa65a8-7826-4e02-a14f-b0c8be0aac11",
+                            ConcurrencyStamp = "ebfed8ab-d6f3-4eec-9220-8a0a746b6932",
                             Name = "Student",
                             NormalizedName = "STUDENT"
                         });
@@ -210,8 +329,8 @@ namespace JapPlatformBackend.Database.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8657),
-                            ModifiedAt = new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8684),
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9130),
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9153),
                             Name = "JAP Dev 09/2022",
                             ProgramId = 1,
                             StartDate = new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -220,8 +339,8 @@ namespace JapPlatformBackend.Database.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8689),
-                            ModifiedAt = new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8691),
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9158),
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9160),
                             Name = "JAP QA 09/2022",
                             ProgramId = 2,
                             StartDate = new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -230,8 +349,8 @@ namespace JapPlatformBackend.Database.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8693),
-                            ModifiedAt = new DateTime(2022, 10, 18, 11, 25, 24, 623, DateTimeKind.Local).AddTicks(8694),
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9162),
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9164),
                             Name = "JAP DevOps 09/2022",
                             ProgramId = 3,
                             StartDate = new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -341,7 +460,7 @@ namespace JapPlatformBackend.Database.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5216ac0f-6432-42af-910b-590af5143102",
+                            ConcurrencyStamp = "365f9886-8e60-4139-8aa8-b9e6ac5b9e95",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -349,7 +468,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Admin",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEJDmi/fvWGj86JFpXNvbqxsROXXpBJjscHv2CmSiALHC4akqiKbvt9Hzl7MJ1FV4RA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMtq7HoJ2U//2AAyjP+Hjm70FbuSYZ9rnapJxT5FRV7u8y+blFAbxcoj3HkNN+1JgQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "admin"
@@ -496,6 +615,43 @@ namespace JapPlatformBackend.Database.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.Lecture", b =>
+                {
+                    b.HasBaseType("JapPlatformBackend.Core.Entities.Base.Item");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Urls")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("Lecture");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9321),
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9324),
+                            Name = "React Course",
+                            WorkHours = 0,
+                            Description = "Description of the React Course",
+                            Urls = "udemy.com"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9327),
+                            ModifiedAt = new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9328),
+                            Name = ".Net Course",
+                            WorkHours = 0,
+                            Description = ".Net Course Description",
+                            Urls = "udemy.com"
+                        });
+                });
+
             modelBuilder.Entity("JapPlatformBackend.Core.Entities.Student", b =>
                 {
                     b.HasBaseType("JapPlatformBackend.Core.Entities.User");
@@ -516,7 +672,7 @@ namespace JapPlatformBackend.Database.Migrations
                             Id = 2,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1994, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "5c6cc880-d29d-4862-8ba2-b2663a096d13",
+                            ConcurrencyStamp = "e229b45d-ec79-4b3e-9f6f-a523600e80d5",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -524,7 +680,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Doe",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEHrswnDsjKD9H2TTpFxr6hmmgWlJze+O44n8XyK+xYF2TxrJ+9qPGWDwQgyfu3nReQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMsQaxYlXBSEMLlDAvOA7X5QpVcJq8Ukggle46760aNRCHSHvzGmEz1RIZtu05BcUA==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "john",
@@ -536,7 +692,7 @@ namespace JapPlatformBackend.Database.Migrations
                             Id = 3,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1998, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "083c4f20-c464-4f73-bb73-d433d536b1c4",
+                            ConcurrencyStamp = "781826a1-d3e5-4290-9af8-f337d1deb5aa",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -544,7 +700,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Doe",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEBUeZxH0QLmuSpoQ4irvnpHTxVpKCcBGNqFquQz8i+DxSTEdTkGCdV0oovRF76YnIg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEC7y0GE2wJpzZSjzlcbELo0JepceMjpDhlJTtAE4scVQ0DjHf1tfgDqTB1u0LoCXkQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "jane",
@@ -556,7 +712,7 @@ namespace JapPlatformBackend.Database.Migrations
                             Id = 4,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1993, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "842d77da-ea0b-434e-85e4-89e0791f2c17",
+                            ConcurrencyStamp = "90bc3698-0a10-43e5-87a8-2edb865086c8",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -564,7 +720,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Jones",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEJBAqAY/ScjHd2YPdXT+DelIgQBM7HPQYXQKC372dd1VeHjs0ea5XMA5jYrTUWleYA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHUE6VxWtj9A/dCMpA8g/6tJzwbx7IWPVbeHBov+U7XIu3TPmJmIZlALc5AeaVjJeQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "jessica",
@@ -576,7 +732,7 @@ namespace JapPlatformBackend.Database.Migrations
                             Id = 5,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(2001, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "adb41fa9-8b3d-489e-b087-5e861afa4042",
+                            ConcurrencyStamp = "8babbc7c-ebbf-4106-8dd3-eda5a5bb4d0c",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -584,7 +740,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Wayne",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEPaaRoQrScm6mc5fJUlxhLkDfHQq78KR1d3TpETXoYBhIfwJ7gxGPbW0nx6pPw4NTg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPZwjwJFZkAHPxtoAcXhV8Y83dF+8e1RHaoUFRoZRUkv7CsmNIRZ24ASjf3Fpcdo9w==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "bruce",
@@ -596,7 +752,7 @@ namespace JapPlatformBackend.Database.Migrations
                             Id = 6,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "d24c9a6e-f040-4e8a-9064-8082c065fe11",
+                            ConcurrencyStamp = "c1ae5eb8-a32d-4704-803a-b69465790b0f",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -604,7 +760,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Murdock",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEK+JgLwkeNsA+nHudmLmjxGPatnvin0GBtcVOGQiINYErUyDvr/43jvajvIHz0q7eg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDzZyHpV84aGo2+xWG7YgKT9sJa9r0gj7TR8tCkiVuMaECHhj/Qwa7najMzxuUGACQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "matt",
@@ -616,7 +772,7 @@ namespace JapPlatformBackend.Database.Migrations
                             Id = 7,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1985, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "21d5e92f-f052-4cc7-96d7-57cebfed6562",
+                            ConcurrencyStamp = "25e551be-c438-48cd-810b-9be587e055c0",
                             CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "mail@mail.com",
                             EmailConfirmed = false,
@@ -624,7 +780,7 @@ namespace JapPlatformBackend.Database.Migrations
                             LastName = "Stark",
                             LockoutEnabled = false,
                             ModifiedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PasswordHash = "AQAAAAEAACcQAAAAEBV+/38YDeEMwaarznrZqB7ZxeVsRHmDoB3GaAohXQghQmfaxyLUN9303Gca2+Q1hw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEM/4nFV7Wlz+ytmIYJDPFQx8STLHqOrnekhcZdTa6Wj45jvnlN5wdIcZ1PmPcPyglQ==",
                             PhoneNumberConfirmed = false,
                             TwoFactorEnabled = false,
                             UserName = "tony",
@@ -646,6 +802,44 @@ namespace JapPlatformBackend.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Author");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.ItemProgram", b =>
+                {
+                    b.HasOne("JapPlatformBackend.Core.Entities.Base.Item", "Item")
+                        .WithMany("ItemPrograms")
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JapPlatformBackend.Core.Entities.Program", "Program")
+                        .WithMany("ItemPrograms")
+                        .HasForeignKey("ProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Program");
+                });
+
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.ItemProgramStudent", b =>
+                {
+                    b.HasOne("JapPlatformBackend.Core.Entities.ItemProgram", "ItemProgram")
+                        .WithMany("ItemProgramStudents")
+                        .HasForeignKey("ItemProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("JapPlatformBackend.Core.Entities.Student", "Student")
+                        .WithMany("ItemProgramStudents")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ItemProgram");
 
                     b.Navigation("Student");
                 });
@@ -726,8 +920,20 @@ namespace JapPlatformBackend.Database.Migrations
                     b.Navigation("Selection");
                 });
 
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.Base.Item", b =>
+                {
+                    b.Navigation("ItemPrograms");
+                });
+
+            modelBuilder.Entity("JapPlatformBackend.Core.Entities.ItemProgram", b =>
+                {
+                    b.Navigation("ItemProgramStudents");
+                });
+
             modelBuilder.Entity("JapPlatformBackend.Core.Entities.Program", b =>
                 {
+                    b.Navigation("ItemPrograms");
+
                     b.Navigation("Selections");
                 });
 
@@ -749,6 +955,8 @@ namespace JapPlatformBackend.Database.Migrations
             modelBuilder.Entity("JapPlatformBackend.Core.Entities.Student", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("ItemProgramStudents");
                 });
 #pragma warning restore 612, 618
         }
