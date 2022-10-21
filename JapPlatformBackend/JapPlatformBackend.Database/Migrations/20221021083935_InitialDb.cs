@@ -316,22 +316,25 @@ namespace JapPlatformBackend.Database.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "92ed1e27-3ae7-4295-bbbe-ff96f54e742e", "Admin", "ADMIN" },
-                    { 2, "ebfed8ab-d6f3-4eec-9220-8a0a746b6932", "Student", "STUDENT" }
+                    { 1, "6f805f08-214f-43df-a542-8e92534be88e", "Admin", "ADMIN" },
+                    { 2, "f616c33e-a9ee-428d-86cc-999f93370e5d", "Student", "STUDENT" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, null, "365f9886-8e60-4139-8aa8-b9e6ac5b9e95", "User", "mail@mail.com", false, "Admin", "Admin", false, null, null, null, "AQAAAAEAACcQAAAAEMtq7HoJ2U//2AAyjP+Hjm70FbuSYZ9rnapJxT5FRV7u8y+blFAbxcoj3HkNN+1JgQ==", null, false, null, false, "admin" });
+                values: new object[] { 1, 0, null, "b2ebc8f3-ce29-441c-b5e8-33b2c1e4ef75", "User", "mail@mail.com", false, "Admin", "Admin", false, null, null, null, "AQAAAAEAACcQAAAAECm9heJAdh/GYP6IFNHiK+f8TXQflrcPVaFluWtx/q72kmmGAMWqqgve2z265ooPww==", null, false, null, false, "admin" });
 
             migrationBuilder.InsertData(
                 table: "Items",
                 columns: new[] { "Id", "CreatedAt", "Description", "Discriminator", "ModifiedAt", "Name", "Urls", "WorkHours" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9321), "Description of the React Course", "Lecture", new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9324), "React Course", "udemy.com", 0 },
-                    { 2, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9327), ".Net Course Description", "Lecture", new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9328), ".Net Course", "udemy.com", 0 }
+                    { 1, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(672), "Description of the React Course", "Lecture", new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(674), "React Course", "udemy.com", 20 },
+                    { 2, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(677), ".Net Course Description", "Lecture", new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(678), ".Net Course", "udemy.com", 30 },
+                    { 3, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(681), "Course Description", "Lecture", new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(682), "Postman Course", "udemy.com", 10 },
+                    { 4, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(684), "Course Description", "Lecture", new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(685), "xUnit Course", "udemy.com", 10 },
+                    { 5, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(687), "Course Description", "Lecture", new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(688), "Docker Course", "udemy.com", 20 }
                 });
 
             migrationBuilder.InsertData(
@@ -339,9 +342,9 @@ namespace JapPlatformBackend.Database.Migrations
                 columns: new[] { "Id", "CreatedAt", "Description", "ModifiedAt", "Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(823), "Dev JAP is a 9-week program designed to prepare you for a full-time client engagement where you would work as a Junior Software Developer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(856), "JAP Dev" },
-                    { 2, new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(861), "QA JAP is a 5-week program designed to prepare you for a full-time client engagement where you would work as a Junior Quality Assurance engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(863), "JAP QA" },
-                    { 3, new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(865), "DevOps JAP is a 13-week program designed to prepare you for a full-time client engagement where you would work as a Junior DevOps engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 20, 17, 56, 4, 313, DateTimeKind.Local).AddTicks(866), "JAP DevOps" }
+                    { 1, new DateTime(2022, 10, 21, 10, 39, 35, 171, DateTimeKind.Local).AddTicks(4447), "Dev JAP is a 9-week program designed to prepare you for a full-time client engagement where you would work as a Junior Software Developer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 21, 10, 39, 35, 171, DateTimeKind.Local).AddTicks(4477), "JAP Dev" },
+                    { 2, new DateTime(2022, 10, 21, 10, 39, 35, 171, DateTimeKind.Local).AddTicks(4482), "QA JAP is a 5-week program designed to prepare you for a full-time client engagement where you would work as a Junior Quality Assurance engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 21, 10, 39, 35, 171, DateTimeKind.Local).AddTicks(4483), "JAP QA" },
+                    { 3, new DateTime(2022, 10, 21, 10, 39, 35, 171, DateTimeKind.Local).AddTicks(4485), "DevOps JAP is a 13-week program designed to prepare you for a full-time client engagement where you would work as a Junior DevOps engineer within existing Mistral teams. The program is designed to fit your pace and will be completely personalized according to your current capabilities.", new DateTime(2022, 10, 21, 10, 39, 35, 171, DateTimeKind.Local).AddTicks(4487), "JAP DevOps" }
                 });
 
             migrationBuilder.InsertData(
@@ -355,7 +358,10 @@ namespace JapPlatformBackend.Database.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 1, 1 },
-                    { 2, 2, 2, 1 }
+                    { 2, 2, 2, 1 },
+                    { 3, 3, 2, 2 },
+                    { 4, 4, 1, 2 },
+                    { 5, 5, 1, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -363,9 +369,9 @@ namespace JapPlatformBackend.Database.Migrations
                 columns: new[] { "Id", "CreatedAt", "ModifiedAt", "Name", "ProgramId", "StartDate", "Status" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9130), new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9153), "JAP Dev 09/2022", 1, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 2, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9158), new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9160), "JAP QA 09/2022", 2, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
-                    { 3, new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9162), new DateTime(2022, 10, 20, 17, 56, 4, 348, DateTimeKind.Local).AddTicks(9164), "JAP DevOps 09/2022", 3, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 }
+                    { 1, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(529), new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(547), "JAP Dev 09/2022", 1, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 2, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(551), new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(553), "JAP QA 09/2022", 2, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 },
+                    { 3, new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(555), new DateTime(2022, 10, 21, 10, 39, 35, 207, DateTimeKind.Local).AddTicks(557), "JAP DevOps 09/2022", 3, new DateTime(2022, 9, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 0 }
                 });
 
             migrationBuilder.InsertData(
@@ -373,12 +379,12 @@ namespace JapPlatformBackend.Database.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "SelectionId", "Status", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 2, 0, new DateTime(1994, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "e229b45d-ec79-4b3e-9f6f-a523600e80d5", "Student", "mail@mail.com", false, "John", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEMsQaxYlXBSEMLlDAvOA7X5QpVcJq8Ukggle46760aNRCHSHvzGmEz1RIZtu05BcUA==", null, false, null, 1, 0, false, "john" },
-                    { 3, 0, new DateTime(1998, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "781826a1-d3e5-4290-9af8-f337d1deb5aa", "Student", "mail@mail.com", false, "Jane", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEC7y0GE2wJpzZSjzlcbELo0JepceMjpDhlJTtAE4scVQ0DjHf1tfgDqTB1u0LoCXkQ==", null, false, null, 1, 1, false, "jane" },
-                    { 4, 0, new DateTime(1993, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "90bc3698-0a10-43e5-87a8-2edb865086c8", "Student", "mail@mail.com", false, "Jessica", "Jones", false, null, null, null, "AQAAAAEAACcQAAAAEHUE6VxWtj9A/dCMpA8g/6tJzwbx7IWPVbeHBov+U7XIu3TPmJmIZlALc5AeaVjJeQ==", null, false, null, 2, 3, false, "jessica" },
-                    { 5, 0, new DateTime(2001, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "8babbc7c-ebbf-4106-8dd3-eda5a5bb4d0c", "Student", "mail@mail.com", false, "Bruce", "Wayne", false, null, null, null, "AQAAAAEAACcQAAAAEPZwjwJFZkAHPxtoAcXhV8Y83dF+8e1RHaoUFRoZRUkv7CsmNIRZ24ASjf3Fpcdo9w==", null, false, null, 2, 1, false, "bruce" },
-                    { 6, 0, new DateTime(1990, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "c1ae5eb8-a32d-4704-803a-b69465790b0f", "Student", "mail@mail.com", false, "Matt", "Murdock", false, null, null, null, "AQAAAAEAACcQAAAAEDzZyHpV84aGo2+xWG7YgKT9sJa9r0gj7TR8tCkiVuMaECHhj/Qwa7najMzxuUGACQ==", null, false, null, 2, 1, false, "matt" },
-                    { 7, 0, new DateTime(1985, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "25e551be-c438-48cd-810b-9be587e055c0", "Student", "mail@mail.com", false, "Tony", "Stark", false, null, null, null, "AQAAAAEAACcQAAAAEM/4nFV7Wlz+ytmIYJDPFQx8STLHqOrnekhcZdTa6Wj45jvnlN5wdIcZ1PmPcPyglQ==", null, false, null, 3, 2, false, "tony" }
+                    { 2, 0, new DateTime(1994, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "9438925a-d57d-4258-b098-e01f9634d7ff", "Student", "mail@mail.com", false, "John", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEFZEkHLviR1lGAwZ752UHeNJVw1/DVv4CnCBfzxje5QZUQ14NAVhsIM6Cugy8FVM9A==", null, false, null, 1, 0, false, "john" },
+                    { 3, 0, new DateTime(1998, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "0bfc1614-1f3a-41c1-999c-4be3a314d401", "Student", "mail@mail.com", false, "Jane", "Doe", false, null, null, null, "AQAAAAEAACcQAAAAEFi52zssvLTyRD1thUdj+F+LaaafVgDLWrsb56tGo/wFLd4d0tfVgt0BZELZWtsOSg==", null, false, null, 1, 1, false, "jane" },
+                    { 4, 0, new DateTime(1993, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1b3c138e-e7e8-44bf-8a2e-4350c8b37d72", "Student", "mail@mail.com", false, "Jessica", "Jones", false, null, null, null, "AQAAAAEAACcQAAAAECpN+T+dpyR5K8lSqmFgxyCQRmL6CYO448H6k/1zreL3QaTXaHTJ7SOmYRjq7JD6nw==", null, false, null, 2, 3, false, "jessica" },
+                    { 5, 0, new DateTime(2001, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "1d0e5e06-9574-4f50-b632-233d298afdd2", "Student", "mail@mail.com", false, "Bruce", "Wayne", false, null, null, null, "AQAAAAEAACcQAAAAEElteFhuxniChhLNEL0NQ+CZQRw1f1rPj/v1T3m562IOI8Q0QZCLxQ14T/prWUAyPw==", null, false, null, 2, 1, false, "bruce" },
+                    { 6, 0, new DateTime(1990, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "cb1a01ba-14c6-4d77-b296-a1d3630a040b", "Student", "mail@mail.com", false, "Matt", "Murdock", false, null, null, null, "AQAAAAEAACcQAAAAENurvQ2TmDUCn+ky1oyImx1sVbf+i29spgKAtEe7cRbIMAEqXSwlFXtDhZLZS9CRHA==", null, false, null, 2, 1, false, "matt" },
+                    { 7, 0, new DateTime(1985, 3, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "dec34eca-a85e-4036-9f56-fed79c8590ae", "Student", "mail@mail.com", false, "Tony", "Stark", false, null, null, null, "AQAAAAEAACcQAAAAEGeUeD89clD3I7x9HVlnRbrpfBULhSrl9m3Jx9Xjwv/lo2+pbctIWel3HgR3TDBvqw==", null, false, null, 3, 2, false, "tony" }
                 });
 
             migrationBuilder.InsertData(

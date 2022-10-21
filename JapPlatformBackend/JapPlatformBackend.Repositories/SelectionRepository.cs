@@ -71,49 +71,23 @@ namespace JapPlatformBackend.Repositories
                 .FirstOrDefaultAsync(s => s.Id == slectionId)
                 ?? throw new ResourceNotFound("Selection");
 
+            var studentExists = selection.Students.Any(s => s.Id == studentId);
+
+            if (studentExists)
+                throw new BadRequestException("Student is already in this selection");
+
+            var ips = await context.ItemProgramStudents.Where(ips => ips.StudentId == studentId).ToArrayAsync();
+            if (ips.Length > 0)
+            {
+                context.ItemProgramStudents.RemoveRange(ips);
+            }
+
             selection.ModifiedAt = DateTime.Now;
             student.ModifiedAt = DateTime.Now;
 
             selection.Students.Add(student);
 
-            var itemPrograms = await context.ItemPrograms
-                .Include(ip => ip.Item)
-                .Include(ip => ip.ItemProgramStudents)
-                .Where(ip => ip.ProgramId == selection.ProgramId)
-                .OrderBy(ip => ip.OrderNumber)
-                .ToListAsync();
-
-            for (int i = 0; i < itemPrograms.Count; i++)
-            {
-                var duration = Math.Ceiling((double)itemPrograms[i].Item.WorkHours / 8);
-                var startDate = i == 0 ? selection.StartDate : itemPrograms[i - 1].ItemProgramStudents[i - 1].EndDate;
-                var endDate = i == 0 ? selection.StartDate.AddDays(duration) : startDate.AddDays(duration);
-
-                context.ItemProgramStudents.Add(new ItemProgramStudent
-                {
-                    ItemProgramId = itemPrograms[i].Id,
-                    StudentId = studentId,
-                    StartDate = startDate,
-                    EndDate = endDate,
-
-                });
-            }
-
-            //itemPrograms.ForEach((item, index) =>
-
-            //    context.ItemProgramStudents.Add(new ItemProgramStudent
-            //    {
-            //        ItemProgramId = item.Id,
-            //        StudentId = studentId,
-            //        StartDate = DateTime.Now,
-            //        EndDate = DateTime.Now,
-
-            //    });
-            //);
-            //foreach (ItemProgram ip in itemPrograms)
-            //{
-
-            //}
+            await SetItemsStartEndDates(selection, studentId);
 
             await context.SaveChangesAsync();
 
@@ -140,6 +114,32 @@ namespace JapPlatformBackend.Repositories
             await context.SaveChangesAsync();
 
             return mapper.Map<GetSelectionDto>(selection);
+        }
+
+        private async Task SetItemsStartEndDates(Selection selection, int studentId)
+        {
+            var itemPrograms = await context.ItemPrograms
+                .Include(ip => ip.Item)
+                .Include(ip => ip.ItemProgramStudents)
+                .Where(ip => ip.ProgramId == selection.ProgramId)
+                .OrderBy(ip => ip.OrderNumber)
+                .ToListAsync();
+
+            for (int i = 0; i < itemPrograms.Count; i++)
+            {
+                var duration = Math.Ceiling((double)itemPrograms[i].Item.WorkHours / 8);
+                var startDate = i == 0 ? selection.StartDate : itemPrograms[i - 1].ItemProgramStudents[i - 1].EndDate;
+                var endDate = i == 0 ? selection.StartDate.AddDays(duration) : startDate.AddDays(duration);
+
+                context.ItemProgramStudents.Add(new ItemProgramStudent
+                {
+                    ItemProgramId = itemPrograms[i].Id,
+                    StudentId = studentId,
+                    StartDate = startDate,
+                    EndDate = endDate,
+
+                });
+            }
         }
     }
 }

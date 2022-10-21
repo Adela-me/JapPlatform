@@ -8,16 +8,6 @@ namespace JapPlatformBackend.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<ItemProgram> builder)
         {
-            //builder.HasKey(ip => new { ip.ItemId, ip.ProgramId });
-
-            //builder.HasOne(ip => ip.Item)
-            //    .WithMany(i => i.ItemPrograms)
-            //    .HasForeignKey(ip => ip.ProgramId);
-
-            //builder.HasOne(ip => ip.Program)
-            //    .WithMany(p => p.ItemPrograms)
-            //    .HasForeignKey(ip => ip.ProgramId);
-
             builder
                 .HasData(
                 new ItemProgram
@@ -33,6 +23,27 @@ namespace JapPlatformBackend.Database.Configurations
                     ItemId = 2,
                     ProgramId = 1,
                     OrderNumber = 2,
+                },
+                new ItemProgram
+                {
+                    Id = 3,
+                    ItemId = 3,
+                    ProgramId = 2,
+                    OrderNumber = 2,
+                },
+                new ItemProgram
+                {
+                    Id = 4,
+                    ItemId = 4,
+                    ProgramId = 2,
+                    OrderNumber = 1,
+                },
+                new ItemProgram
+                {
+                    Id = 5,
+                    ItemId = 5,
+                    ProgramId = 3,
+                    OrderNumber = 1,
                 }
                 );
 

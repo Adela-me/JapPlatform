@@ -14,6 +14,7 @@ namespace JapPlatformBackend.Database.Configurations
                     Id = 1,
                     Name = "React Course",
                     Description = "Description of the React Course",
+                    WorkHours = 20,
                     Urls = "udemy.com"
                 },
                 new Lecture
@@ -21,6 +22,31 @@ namespace JapPlatformBackend.Database.Configurations
                     Id = 2,
                     Name = ".Net Course",
                     Description = ".Net Course Description",
+                    WorkHours = 30,
+                    Urls = "udemy.com"
+                },
+                new Lecture
+                {
+                    Id = 3,
+                    Name = "Postman Course",
+                    Description = "Course Description",
+                    WorkHours = 10,
+                    Urls = "udemy.com"
+                },
+                new Lecture
+                {
+                    Id = 4,
+                    Name = "xUnit Course",
+                    Description = "Course Description",
+                    WorkHours = 10,
+                    Urls = "udemy.com"
+                },
+                new Lecture
+                {
+                    Id = 5,
+                    Name = "Docker Course",
+                    Description = "Course Description",
+                    WorkHours = 20,
                     Urls = "udemy.com"
                 });
         }

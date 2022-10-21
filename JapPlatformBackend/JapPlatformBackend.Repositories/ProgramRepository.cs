@@ -21,15 +21,20 @@ namespace JapPlatformBackend.Repositories
 
         public override async Task<GetProgramDto> Create(CreateProgramDto newProgram)
         {
-            var lecture = await context.Items
+            var item = await context.Items
                 .FirstOrDefaultAsync(l => l.Id == newProgram.ItemId)
                 ?? throw new ResourceNotFound("Item");
 
             var program = mapper.Map<Program>(newProgram);
 
-            program.Items.Add(lecture);
-
             context.Programs.Add(program);
+            Console.WriteLine("**********************LOGGING PROGRAM ID: " + program.Id);
+            program.ItemPrograms.Add(new ItemProgram
+            {
+                Item = item,
+                Program = program,
+                OrderNumber = newProgram.OrderNumber
+            });
 
             await context.SaveChangesAsync();
             return mapper.Map<GetProgramDto>(program);

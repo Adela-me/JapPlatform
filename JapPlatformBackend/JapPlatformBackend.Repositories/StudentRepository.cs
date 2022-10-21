@@ -20,6 +20,21 @@ namespace JapPlatformBackend.Repositories
             this.mapper = mapper;
         }
 
+        public override async Task<GetStudentDto> GetById(int id, string includes)
+        {
+            var student = await context.Students
+                .Include(s => s.Comments)
+                    .ThenInclude(c => c.Author)
+                .Include(s => s.Selection)
+                    .ThenInclude(s => s.Program)
+                .Include(s => s.ItemProgramStudents.OrderBy(ips => ips.ItemProgram.OrderNumber))
+                    .ThenInclude(ips => ips.ItemProgram)
+                        .ThenInclude(ip => ip.Item)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            return mapper.Map<GetStudentDto>(student);
+        }
+
         public override async Task<GetStudentDto> Update(int id, UpdateStudentDto updatedStudent)
         {
             var student = await context.Students
