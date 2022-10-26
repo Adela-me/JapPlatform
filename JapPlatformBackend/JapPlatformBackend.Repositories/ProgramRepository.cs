@@ -4,6 +4,7 @@ using JapPlatformBackend.Core.Dtos.Program;
 using JapPlatformBackend.Core.Entities;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
+using JapPlatformBackend.Repositories.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace JapPlatformBackend.Repositories
@@ -19,24 +20,76 @@ namespace JapPlatformBackend.Repositories
             this.mapper = mapper;
         }
 
+        public override async Task<GetProgramDto> GetById(int id, string includes = "")
+        {
+            var program = await context.Programs
+                .Include(p => p.Selections)
+                .Include(p => p.ItemPrograms.OrderBy(p => p.OrderNumber))
+                    .ThenInclude(ip => ip.Item)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return mapper.Map<GetProgramDto>(program);
+        }
         public override async Task<GetProgramDto> Create(CreateProgramDto newProgram)
         {
-            var item = await context.Items
-                .FirstOrDefaultAsync(l => l.Id == newProgram.ItemId)
-                ?? throw new ResourceNotFound("Item");
 
             var program = mapper.Map<Program>(newProgram);
 
             context.Programs.Add(program);
-            Console.WriteLine("**********************LOGGING PROGRAM ID: " + program.Id);
-            program.ItemPrograms.Add(new ItemProgram
-            {
-                Item = item,
-                Program = program,
-                OrderNumber = newProgram.OrderNumber
-            });
+
+            var itemsIds = newProgram.ItemPrograms.Select(ip => ip.ItemId);
+
+            //Checking if all ids are from existing Items
+            var validIds = itemsIds.All(id => context.Items.Select(p => p.Id).Contains(id));
+
+            if (!validIds)
+                throw new BadRequestException("Item ids are not valid");
 
             await context.SaveChangesAsync();
+            return mapper.Map<GetProgramDto>(program);
+        }
+        public override async Task<GetProgramDto> Update(int id, UpdateProgramDto newProgram)
+        {
+
+            var program = await context.Programs
+                .Include(p => p.Selections)
+                    .ThenInclude(s => s.Students)
+                        .ThenInclude(s => s.ItemProgramStudents)
+                .Include(p => p.ItemPrograms)
+                .FirstOrDefaultAsync(p => p.Id == id)
+               ?? throw new ResourceNotFound("Program");
+
+
+
+            program.Name = newProgram.Name;
+            program.Description = newProgram.Description;
+
+            var newItemPrograms = newProgram.ItemPrograms.OrderBy(ip => ip.OrderNumber).Select(ip => mapper.Map<ItemProgram>(ip)).ToList();
+            var oldIPS = program.ItemPrograms.Select(ip => ip.ItemProgramStudents).SelectMany(ips => ips).ToList();
+            program.ItemPrograms.RemoveAll(ip => ip.ProgramId == id);
+            program.ItemPrograms.AddRange(newItemPrograms);
+            context.ItemProgramStudents.RemoveRange(oldIPS);
+            await context.SaveChangesAsync();
+
+            program = await context.Programs
+                .Include(p => p.Selections)
+                    .ThenInclude(s => s.Students)
+                        .ThenInclude(s => s.ItemProgramStudents)
+                .Include(p => p.ItemPrograms)
+                    .ThenInclude(ip => ip.Item)
+                .FirstOrDefaultAsync(p => p.Id == id)
+               ?? throw new ResourceNotFound("Program");
+
+            var students = program.Selections.Select(s => s.Students).SelectMany(s => s).ToList();
+
+            var ips = Calc.SetItemsStartEndDates(students);
+
+            context.ItemProgramStudents.AddRange(ips);
+
+            program.ModifiedAt = DateTime.Now;
+
+            await context.SaveChangesAsync();
+
             return mapper.Map<GetProgramDto>(program);
         }
 

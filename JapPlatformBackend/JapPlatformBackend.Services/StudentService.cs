@@ -61,8 +61,8 @@ namespace JapPlatformBackend.Services
 
             await userManager.AddToRoleAsync(student, "Student");
 
-            var template = EmailHelpers.CreateTemplate(student.UserName, newStudent.Password);
-            var emailSent = await mailService.SendEmail(student.Email, EmailHelpers.Subject, template);
+            var template = EmailHelpers.CreateTemplateCredentials(student.UserName, newStudent.Password);
+            var emailSent = await mailService.SendEmail(student.Email, EmailHelpers.SubjectCredentials, template);
 
             if (!emailSent)
             {
@@ -99,15 +99,17 @@ namespace JapPlatformBackend.Services
             return response;
         }
 
-        public async Task<ServiceResponse<GetStudentDto>> GetProfile()
+        public async Task<ServiceResponse<GetStudentProfileDto>> GetProfile()
         {
             int studentId = UserHelpers.GetLoggedInUserId(httpContextAccessor);
 
             var includes = "Comments.Author, Selection.Program, ItemProgramStudents.ItemProgram.Item";
 
-            var response = new ServiceResponse<GetStudentDto>
+            var student = await studentRepository.GetById(studentId, includes);
+
+            var response = new ServiceResponse<GetStudentProfileDto>
             {
-                Data = await studentRepository.GetById(studentId, includes)
+                Data = mapper.Map<GetStudentProfileDto>(student)
             };
             return response;
         }

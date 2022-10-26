@@ -28,7 +28,7 @@ namespace JapPlatformBackend.Database.Configurations
                     j =>
                     {
                         j.Property(ip => ip.OrderNumber).HasDefaultValue(0);
-                        // j.HasKey(ip => new { ip.ProgramId, ip.ItemId });
+                        j.HasKey(ip => new { ip.ProgramId, ip.ItemId });
                     });
 
             builder.HasData(

@@ -36,7 +36,7 @@ namespace JapPlatformBackend.Api.Controllers
         }
 
         [Authorize(Roles = "Student")]
-        [HttpGet("profile")]
+        [HttpGet("Profile")]
         public async Task<ActionResult> GetProfile()
         {
             return Ok(await studentService.GetProfile());

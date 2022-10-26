@@ -23,6 +23,7 @@ namespace JapPlatformBackend.Database
         public DbSet<Comment> Comments { get; set; } = null!;
         public DbSet<Item> Items { get; set; } = null!;
         public DbSet<Lecture> Lectures { get; set; } = null!;
+        public DbSet<Event> Events { get; set; } = null!;
         public DbSet<ItemProgram> ItemPrograms { get; set; } = null!;
         public DbSet<ItemProgramStudent> ItemProgramStudents { get; set; } = null!;
         public DbSet<GetSelectionsSuccess> GetSelectionsSuccess { get; set; } = null!;

@@ -9,10 +9,10 @@ namespace JapPlatformBackend.Api.Controllers
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class LectureController : ControllerBase
+    public class LecturesController : ControllerBase
     {
         private readonly ILectureService lectureService;
-        public LectureController(ILectureService lectureService)
+        public LecturesController(ILectureService lectureService)
         {
             this.lectureService = lectureService;
         }

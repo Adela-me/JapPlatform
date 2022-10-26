@@ -7,6 +7,7 @@ namespace JapPlatformBackend.Core.Entities
     {
         public string Name { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public SelectionStatus Status { get; set; }
 
         public int ProgramId { get; set; }

@@ -4,6 +4,7 @@ using JapPlatformBackend.Core.Dtos.Selection;
 using JapPlatformBackend.Core.Entities;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
+using JapPlatformBackend.Repositories.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace JapPlatformBackend.Repositories
@@ -30,11 +31,45 @@ namespace JapPlatformBackend.Repositories
                 .FirstOrDefaultAsync(s => s.Id == newSelection.StudentId)
                 ?? throw new ResourceNotFound("Student");
 
+            var ips = context.ItemProgramStudents.Where(ips => ips.StudentId == newSelection.StudentId).ToList();
+            context.ItemProgramStudents.RemoveRange(ips);
+
             var selection = mapper.Map<Selection>(newSelection);
 
             selection.Students.Add(student);
 
             context.Selections.Add(selection);
+            await context.SaveChangesAsync();
+
+            program = await context.Programs
+                .Include(p => p.Selections)
+                    .ThenInclude(s => s.Students)
+                        .ThenInclude(s => s.ItemProgramStudents)
+                .Include(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
+                    .ThenInclude(ip => ip.Item)
+                .FirstOrDefaultAsync(p => p.Id == program.Id)
+               ?? throw new ResourceNotFound("Program");
+
+            for (int i = 0; i < program.ItemPrograms.Count; i++)
+            {
+
+                var duration = Math.Ceiling((double)program.ItemPrograms[i].Item.WorkHours / 8);
+                var startDate = i == 0 ? student.Selection.StartDate : program.ItemPrograms[i - 1].ItemProgramStudents[0].EndDate;
+                var endDate = i == 0 ? student.Selection.StartDate.AddDays(duration) : startDate?.AddDays(duration);
+
+                context.ItemProgramStudents.Add(new ItemProgramStudent
+                {
+                    ItemId = program.ItemPrograms[i].ItemId,
+                    ProgramId = program.ItemPrograms[i].ProgramId,
+                    StudentId = student.Id,
+                    StartDate = startDate,
+                    EndDate = endDate,
+
+                });
+
+            }
+            program.ModifiedAt = DateTime.Now;
+
             await context.SaveChangesAsync();
 
             return mapper.Map<GetSelectionDto>(selection);
@@ -50,11 +85,20 @@ namespace JapPlatformBackend.Repositories
                 Program? program = await context.Programs
                     .FirstOrDefaultAsync(p => p.Id == updatedSelection.ProgramId)
                     ?? throw new ResourceNotFound("Program");
+
+                // obrisati sve ips za studente trenutne selekcije
+                //recalculate ips za sve studente u updated selekciji
+
             }
 
             selection = mapper.Map(updatedSelection, selection);
 
             selection.ModifiedAt = DateTime.Now;
+
+            if (selection.StartDate.Date != updatedSelection.StartDate)
+            {
+                //recalculate ips
+            }
 
             await context.SaveChangesAsync();
 
@@ -76,18 +120,27 @@ namespace JapPlatformBackend.Repositories
             if (studentExists)
                 throw new BadRequestException("Student is already in this selection");
 
-            var ips = await context.ItemProgramStudents.Where(ips => ips.StudentId == studentId).ToArrayAsync();
-            if (ips.Length > 0)
-            {
-                context.ItemProgramStudents.RemoveRange(ips);
-            }
-
             selection.ModifiedAt = DateTime.Now;
             student.ModifiedAt = DateTime.Now;
 
             selection.Students.Add(student);
 
-            await SetItemsStartEndDates(selection, studentId);
+            var oldIPS = context.ItemProgramStudents.Where(ips => ips.StudentId == studentId).ToList();
+            context.ItemProgramStudents.RemoveRange(oldIPS);
+            await context.SaveChangesAsync();
+
+            var students = await context.Students
+                .Where(s => s.Id == studentId)
+                .Include(s => s.Selection)
+                    .ThenInclude(s => s.Program)
+                        .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
+                        .ThenInclude(p => p.ItemProgramStudents)
+                            .ThenInclude(ips => ips.Item)
+                .ToListAsync();
+
+            var ips = Calc.SetItemsStartEndDates(students);
+
+            context.ItemProgramStudents.AddRange(ips);
 
             await context.SaveChangesAsync();
 
@@ -105,7 +158,11 @@ namespace JapPlatformBackend.Repositories
                 .FirstOrDefaultAsync(s => s.Id == slectionId)
                 ?? throw new ResourceNotFound("Selection");
 
-            // Allows to delete last student, leaving selection with no students
+            var ips = await context.ItemProgramStudents.Where(ips => ips.StudentId == studentId).ToArrayAsync();
+            if (ips.Length > 0)
+            {
+                context.ItemProgramStudents.RemoveRange(ips);
+            }
 
             selection.ModifiedAt = DateTime.Now;
             student.ModifiedAt = DateTime.Now;
@@ -114,32 +171,6 @@ namespace JapPlatformBackend.Repositories
             await context.SaveChangesAsync();
 
             return mapper.Map<GetSelectionDto>(selection);
-        }
-
-        private async Task SetItemsStartEndDates(Selection selection, int studentId)
-        {
-            var itemPrograms = await context.ItemPrograms
-                .Include(ip => ip.Item)
-                .Include(ip => ip.ItemProgramStudents)
-                .Where(ip => ip.ProgramId == selection.ProgramId)
-                .OrderBy(ip => ip.OrderNumber)
-                .ToListAsync();
-
-            for (int i = 0; i < itemPrograms.Count; i++)
-            {
-                var duration = Math.Ceiling((double)itemPrograms[i].Item.WorkHours / 8);
-                var startDate = i == 0 ? selection.StartDate : itemPrograms[i - 1].ItemProgramStudents[i - 1].EndDate;
-                var endDate = i == 0 ? selection.StartDate.AddDays(duration) : startDate.AddDays(duration);
-
-                context.ItemProgramStudents.Add(new ItemProgramStudent
-                {
-                    ItemProgramId = itemPrograms[i].Id,
-                    StudentId = studentId,
-                    StartDate = startDate,
-                    EndDate = endDate,
-
-                });
-            }
         }
     }
 }

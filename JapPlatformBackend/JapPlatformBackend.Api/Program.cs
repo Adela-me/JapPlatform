@@ -1,8 +1,8 @@
+using Hangfire;
 using JapPlatformBackend.Api.Extensions;
 using JapPlatformBackend.Api.Middleware;
-using JapPlatformBackend.Core.Entities;
+using JapPlatformBackend.Core.Interfaces;
 using JapPlatformBackend.Database;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -26,13 +26,6 @@ builder.Services.RegisterAutomapperProfiles();
 
 builder.Services.RegisterValidators();
 
-builder.Services.AddIdentityCore<User>()
-                .AddRoles<Role>()
-                .AddRoleManager<RoleManager<Role>>()
-                .AddSignInManager<SignInManager<User>>()
-                .AddRoleValidator<RoleValidator<Role>>()
-                .AddEntityFrameworkStores<DataContext>();
-
 builder.Services.RegisterIdentity();
 
 builder.Services.RegisterAuthentication(builder.Configuration);
@@ -40,6 +33,10 @@ builder.Services.RegisterAuthentication(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.SetupCors();
+
+builder.Services.RegisterHangfire();
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -56,12 +53,19 @@ app.UseCors("AllowOrigin");
 
 app.UseMiddleware<ExceptionHandler>();
 
-app.UseMiddleware<AntiXssMiddleware>();
+//app.UseMiddleware<AntiXssMiddleware>();
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHangfireDashboard("/dashboard");
+
+IAdminService AdminService = app.Services.CreateScope().ServiceProvider.GetRequiredService<IAdminService>();
+RecurringJob.AddOrUpdate("Report Email",
+    () => AdminService.SendEmailReport(),
+    "0 17 * * *", TimeZoneInfo.Local);
 
 app.Run();

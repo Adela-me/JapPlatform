@@ -11,7 +11,11 @@ namespace JapPlatformBackend.Core.MapperProfiles
             CreateMap<Program, GetProgramDto>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.ItemPrograms))
                 .ReverseMap();
+
+            CreateMap<GetProgramDto, GetReductedProgramDto>().ReverseMap();
+
             CreateMap<Program, CreateProgramDto>().ReverseMap();
+
             CreateMap<Program, UpdateProgramDto>().ReverseMap();
         }
     }

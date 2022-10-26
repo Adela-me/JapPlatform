@@ -31,6 +31,7 @@ namespace JapPlatformBackend.Database.Configurations
                    Id = 1,
                    Name = "JAP Dev 09/2022",
                    StartDate = new DateTime(2022, 09, 05),
+                   EndDate = new DateTime(2022, 10, 23),
                    Status = SelectionStatus.Active,
                    ProgramId = 1
                },
@@ -39,6 +40,7 @@ namespace JapPlatformBackend.Database.Configurations
                    Id = 2,
                    Name = "JAP QA 09/2022",
                    StartDate = new DateTime(2022, 09, 05),
+                   EndDate = new DateTime(2022, 10, 24),
                    Status = SelectionStatus.Active,
                    ProgramId = 2
                },
@@ -47,6 +49,7 @@ namespace JapPlatformBackend.Database.Configurations
                    Id = 3,
                    Name = "JAP DevOps 09/2022",
                    StartDate = new DateTime(2022, 09, 05),
+                   EndDate = new DateTime(2022, 10, 25),
                    Status = SelectionStatus.Active,
                    ProgramId = 3
                }

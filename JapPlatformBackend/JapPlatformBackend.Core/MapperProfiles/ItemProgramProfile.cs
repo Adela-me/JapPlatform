@@ -9,6 +9,7 @@ namespace JapPlatformBackend.Core.MapperProfiles
         public ItemProgramProfile()
         {
             CreateMap<ItemProgram, GetItemProgramDto>().ReverseMap();
+            CreateMap<ItemProgram, CreateItemProgramDto>().ReverseMap();
         }
     }
 }
