@@ -1,8 +1,8 @@
 import { Field, Form, Formik } from "formik";
 
-import { Button } from "react-bootstrap";
+import { Button, Row } from "react-bootstrap";
 
-import { programsList, statusList } from "./Selections.data";
+import { statusList } from "./Selections.data";
 import { selectionSchema, selectionUpdateSchema } from "./Selection.validation";
 import useUpdateSelection from "./hooks/useUpdateSelection";
 import useNewSelection from "./hooks/useNewSelection";
@@ -12,12 +12,15 @@ import ContainerCard from "components/Card/ContainerCard";
 import InputControl from "components/Form/InputControl";
 import { SelectControl } from "components/Form/SelectControl";
 import ErrorMessage from "components/Form/ErrorMessage";
+import usePrograms from "features/Programs/hooks/usePrograms";
 
 const SelectionForm = ({ selection }) => {
+  const { data: programsList } = usePrograms();
   const initialValues = {
     name: selection?.name || "",
     programId: selection?.programId.id || undefined,
     startDate: selection?.startDate || "",
+    endDate: selection?.endDate || "",
     status: selection?.status || "",
     studentId: "",
   };
@@ -39,6 +42,7 @@ const SelectionForm = ({ selection }) => {
         name: values?.name,
         programId: parseInt(values?.programId),
         startDate: values?.startDate,
+        endDate: values?.endDate,
         status: values?.status,
       };
       update(updatedSelection);
@@ -78,12 +82,23 @@ const SelectionForm = ({ selection }) => {
                 component={SelectControl}
               />
             )}
-            <Field
-              label="Start date"
-              name="startDate"
-              type="date"
-              component={InputControl}
-            />
+            <Row>
+              <Field
+                label="Start date"
+                name="startDate"
+                type="date"
+                component={InputControl}
+                small={true}
+              />
+              <Field
+                label="End date"
+                name="endDate"
+                type="date"
+                component={InputControl}
+                small={true}
+              />
+            </Row>
+
             <Field
               label="Status"
               name="status"

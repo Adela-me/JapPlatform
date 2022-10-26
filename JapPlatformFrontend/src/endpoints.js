@@ -10,3 +10,6 @@ export const urlLogin = `${baseURL}/auth/login`;
 export const urlLogout = `${baseURL}/auth/logout`;
 export const urlUser = `${baseURL}/users/current`;
 export const urlReport = `${baseURL}/admins/report`;
+export const urlLectures = `${baseURL}/lectures`;
+export const urlItems = `${baseURL}/items`;
+export const urlEvents = `${baseURL}/items/events`;

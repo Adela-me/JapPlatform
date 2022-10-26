@@ -21,12 +21,6 @@ export const tableData = [
   },
 ];
 
-export const programsList = [
-  { code: 1, name: "JAP DEV" },
-  { code: 2, name: "JAP QA" },
-  { code: 3, name: "JAP DevOps" },
-];
-
 export const statusList = [
   { code: "Active", name: "Active" },
   { code: "Complete", name: "Complete" },

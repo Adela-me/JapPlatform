@@ -23,7 +23,7 @@ const TableFilter = ({ tableData }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="filter-form">
+    <form onSubmit={handleSubmit} className="filter-form mb-1">
       <Form.Select
         value={filterBy}
         onChange={(e) => setFilterBy(e.target.value)}

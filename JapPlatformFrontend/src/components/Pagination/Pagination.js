@@ -15,7 +15,7 @@ const Pagination = () => {
   };
   return (
     <div className="pagination-resp">
-      <span className="my-2">
+      <span className="">
         Rows per page:
         <select
           className="mx-3"

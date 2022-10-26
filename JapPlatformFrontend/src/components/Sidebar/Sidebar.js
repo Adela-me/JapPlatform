@@ -15,11 +15,12 @@ const Sidebar = () => {
         <SmNavbar />
       </Row>
       <Row>
-        <Col md={3} className="d-none d-md-block" style={{ height: "100vh" }}>
+        <Col md={3} className="d-none d-md-block">
           <Stack gap={5} className="h-100 text-center border-end ">
-            <h1 className="my-5 py-5">JAP Platform</h1>
+            <h1 className="my-5 py-2">JAP Platform</h1>
             <SidebarLink to="/dashboard" label="Dashboard" />
             <SidebarLink to="/programs" label="Programs" />
+            <SidebarLink to="/lectures" label="Lectures" />
             <SidebarLink to="/students" label="Students" />
             <SidebarLink to="/selections" label="Selections" />
             <Button variant="outline-danger m-2" onClick={() => logout()}>

@@ -6,7 +6,7 @@ const TableBody = ({ dataRows, tableData, showActions, remove }) => {
   return (
     <tbody>
       {dataRows?.map((row) => (
-        <tr key={row?.id}>
+        <tr key={row?.id || row?.name} className={row?.discriminator || ""}>
           {tableData?.map((data) => (
             <td
               key={data?.prop}

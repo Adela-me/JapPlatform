@@ -20,9 +20,12 @@ export const SelectControl = ({
     >
       <Form.Label>{label}</Form.Label>
       <Form.Select id={field.name} {...field} {...props}>
-        <option>Choose selection:</option>
+        <option>Choose:</option>
         {options?.map((option) => (
-          <option key={option.code} value={option.code}>
+          <option
+            key={option.code || option.id}
+            value={option.code || option.id}
+          >
             {option.name}
           </option>
         ))}
