@@ -8,6 +8,7 @@ using JapPlatformBackend.Core.Entities;
 using JapPlatformBackend.Core.Interfaces;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
+using JapPlatformBackend.Repositories.Helpers;
 using JapPlatformBackend.Services.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -68,6 +69,14 @@ namespace JapPlatformBackend.Services
             {
                 throw new JapPlatformException("Student created, email was not sent");
             }
+
+            var students = await Calc.PrepareStudent(context, student.Id);
+
+            var ips = Calc.SetItemsStartEndDates(students);
+
+            context.ItemProgramStudents.AddRange(ips);
+
+            await context.SaveChangesAsync();
 
             var response = new ServiceResponse<GetStudentDto>
             {

@@ -5,6 +5,7 @@ using JapPlatformBackend.Core.Dtos.Student;
 using JapPlatformBackend.Core.Entities;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
+using JapPlatformBackend.Repositories.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace JapPlatformBackend.Repositories
@@ -50,6 +51,12 @@ namespace JapPlatformBackend.Repositories
             student = mapper.Map(updatedStudent, student);
 
             student.ModifiedAt = DateTime.Now;
+
+            var students = await Calc.PrepareStudent(context, id);
+
+            var ips = Calc.SetItemsStartEndDates(students);
+
+            context.ItemProgramStudents.AddRange(ips);
 
             await context.SaveChangesAsync();
 

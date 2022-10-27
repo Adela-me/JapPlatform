@@ -77,29 +77,39 @@ namespace JapPlatformBackend.Repositories
         public override async Task<GetSelectionDto> Update(int id, UpdateSelectionDto updatedSelection)
         {
             var selection = await context.Selections
+                .Include(s => s.Students)
                .FirstOrDefaultAsync(s => s.Id == id)
                ?? throw new ResourceNotFound("Selection");
-
-            if (updatedSelection.ProgramId.HasValue && updatedSelection.ProgramId != selection.ProgramId)
-            {
-                Program? program = await context.Programs
-                    .FirstOrDefaultAsync(p => p.Id == updatedSelection.ProgramId)
-                    ?? throw new ResourceNotFound("Program");
-
-                // obrisati sve ips za studente trenutne selekcije
-                //recalculate ips za sve studente u updated selekciji
-
-            }
 
             selection = mapper.Map(updatedSelection, selection);
 
             selection.ModifiedAt = DateTime.Now;
 
-            if (selection.StartDate.Date != updatedSelection.StartDate)
+            if ((updatedSelection.ProgramId != selection.ProgramId)
+                              || (selection.StartDate.Date == updatedSelection.StartDate.Date))
             {
-                //recalculate ips
-            }
+                List<int?> studentIds = selection.Students.Select(s => s?.Id).ToList();
+                var oldIPS = context.ItemProgramStudents
+                    .Where(ips => studentIds.Contains(ips.StudentId))
+                    .ToList();
+                context.ItemProgramStudents.RemoveRange(oldIPS);
+                await context.SaveChangesAsync(); ;
 
+                var students = await context.Students
+                    .Where(s => s.SelectionId == id)
+                    .Include(p => p.ItemProgramStudents)
+                    .Include(s => s.Selection)
+                        .ThenInclude(s => s.Program)
+                            .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
+                            .ThenInclude(ips => ips.Item)
+
+
+                    .ToListAsync();
+
+                var ips = Calc.SetItemsStartEndDates(students);
+
+                context.ItemProgramStudents.AddRange(ips);
+            }
             await context.SaveChangesAsync();
 
             return mapper.Map<GetSelectionDto>(selection);
@@ -158,7 +168,10 @@ namespace JapPlatformBackend.Repositories
                 .FirstOrDefaultAsync(s => s.Id == slectionId)
                 ?? throw new ResourceNotFound("Selection");
 
-            var ips = await context.ItemProgramStudents.Where(ips => ips.StudentId == studentId).ToArrayAsync();
+            var ips = await context.ItemProgramStudents
+                .Where(ips => ips.StudentId == studentId)
+                .ToArrayAsync();
+
             if (ips.Length > 0)
             {
                 context.ItemProgramStudents.RemoveRange(ips);
@@ -166,6 +179,8 @@ namespace JapPlatformBackend.Repositories
 
             selection.ModifiedAt = DateTime.Now;
             student.ModifiedAt = DateTime.Now;
+
+            student.ItemProgramStudents.RemoveAll(s => s.StudentId == studentId);
 
             selection.Students.Remove(student);
             await context.SaveChangesAsync();

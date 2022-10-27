@@ -52,22 +52,27 @@ namespace JapPlatformBackend.Repositories
         {
 
             var program = await context.Programs
-                .Include(p => p.Selections)
-                    .ThenInclude(s => s.Students)
-                        .ThenInclude(s => s.ItemProgramStudents)
                 .Include(p => p.ItemPrograms)
+                    .ThenInclude(ip => ip.ItemProgramStudents)
                 .FirstOrDefaultAsync(p => p.Id == id)
                ?? throw new ResourceNotFound("Program");
-
-
 
             program.Name = newProgram.Name;
             program.Description = newProgram.Description;
 
-            var newItemPrograms = newProgram.ItemPrograms.OrderBy(ip => ip.OrderNumber).Select(ip => mapper.Map<ItemProgram>(ip)).ToList();
-            var oldIPS = program.ItemPrograms.Select(ip => ip.ItemProgramStudents).SelectMany(ips => ips).ToList();
+            var newItemPrograms = newProgram.ItemPrograms
+                .OrderBy(ip => ip.OrderNumber)
+                .Select(ip => mapper.Map<ItemProgram>(ip))
+                .ToList();
+
+            var oldIPS = program.ItemPrograms
+                .Select(ip => ip.ItemProgramStudents)
+                .SelectMany(ips => ips)
+                .ToList();
+
             program.ItemPrograms.RemoveAll(ip => ip.ProgramId == id);
             program.ItemPrograms.AddRange(newItemPrograms);
+
             context.ItemProgramStudents.RemoveRange(oldIPS);
             await context.SaveChangesAsync();
 

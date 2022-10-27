@@ -15,17 +15,17 @@ export default function useProfile() {
     select: (profile) => {
       const formatedProfile = {
         ...profile,
-        birthDate: dayjs(profile.birthDate).format("DD/MM/YYYY"),
+        birthDate: dayjs(profile?.birthDate).format("DD/MM/YYYY"),
         selection: {
-          ...profile.selection,
-          startDate: dayjs(profile.selection.startDate).format("DD/MM/YYYY"),
+          ...profile?.selection,
+          startDate: dayjs(profile?.selection?.startDate).format("DD/MM/YYYY"),
         },
-        personalProgram: profile.personalProgram.map((item) => {
+        personalProgram: profile?.personalProgram.map((item) => {
           return {
             ...item,
-            startDate: dayjs(item.startDate).format("DD/MM/YYYY"),
-            endDate: dayjs(item.endDate).format("DD/MM/YYYY"),
-            progress: item.progress + "%",
+            startDate: dayjs(item?.startDate).format("DD/MM/YYYY"),
+            endDate: dayjs(item?.endDate).format("DD/MM/YYYY"),
+            progress: item?.progress + "%",
           };
         }),
       };

@@ -25,13 +25,11 @@ const EventForm = ({ programId }) => {
   return (
     <Formik
       initialValues={initialValues}
-      //    validationSchema={programSchema}
       onSubmit={onSubmit}
       enableReinitialize
     >
       {() => (
         <Form>
-          <h5>New Event</h5>
           <Row>
             <Field
               label="Name"
