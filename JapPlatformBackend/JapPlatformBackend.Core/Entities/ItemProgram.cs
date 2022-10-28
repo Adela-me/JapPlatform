@@ -2,7 +2,7 @@
 
 namespace JapPlatformBackend.Core.Entities
 {
-    public class ItemProgram
+    public class ItemProgram : BaseEntity
     {
         public int ItemId { get; set; }
         public Item Item { get; set; }

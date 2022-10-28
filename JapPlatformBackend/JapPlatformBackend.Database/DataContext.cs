@@ -34,13 +34,6 @@ namespace JapPlatformBackend.Database
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Lecture>()
-            //.Property(e => e.Urls)
-            //.HasConversion(
-            //    v => string.Join(',', v),
-            //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
-
-
             // Adding DB configurations and seed
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
@@ -49,8 +42,6 @@ namespace JapPlatformBackend.Database
             modelBuilder.ApplyConfiguration(new StudentConfiguration());
             modelBuilder.ApplyConfiguration(new SelectionConfiguration());
             modelBuilder.ApplyConfiguration(new LectureConfiguration());
-            modelBuilder.ApplyConfiguration(new ItemProgramConfiguration());
-
             modelBuilder.ApplyConfiguration(new GetSelectionsSuccessConfiguration());
             modelBuilder.ApplyConfiguration(new GetOverallSuccessConfiguration());
         }

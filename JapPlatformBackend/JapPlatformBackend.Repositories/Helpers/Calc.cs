@@ -17,23 +17,8 @@ namespace JapPlatformBackend.Repositories.Helpers
                 .Include(s => s.Selection)
                     .ThenInclude(s => s.Program)
                         .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
-                        .ThenInclude(p => p.ItemProgramStudents)
                             .ThenInclude(ips => ips.Item)
                 .ToListAsync();
-
-            return students;
-        }
-
-        public static async Task<List<Student>> PrepareStudents(DataContext context, List<Student> students)
-        {
-            List<int?> studentIds = students.Select(s => s?.Id).ToList();
-            var oldIPS = context.ItemProgramStudents
-                .Where(ips => studentIds.Contains(ips.StudentId))
-                .ToList();
-            context.ItemProgramStudents.RemoveRange(oldIPS);
-            await context.SaveChangesAsync();
-
-            // var students = program.Selections.Select(s => s.Students).SelectMany(s => s).ToList();
 
             return students;
         }
@@ -72,8 +57,7 @@ namespace JapPlatformBackend.Repositories.Helpers
 
                     ips.Add(new ItemProgramStudent
                     {
-                        ItemId = student.Selection.Program.ItemPrograms[i].ItemId,
-                        ProgramId = student.Selection.Program.ItemPrograms[i].ProgramId,
+                        ItemProgramId = student.Selection.Program.ItemPrograms[i].Id,
                         StudentId = student.Id,
                         StartDate = startDate,
                         EndDate = endDate,

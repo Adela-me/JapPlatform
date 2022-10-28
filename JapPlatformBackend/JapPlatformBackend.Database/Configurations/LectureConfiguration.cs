@@ -8,6 +8,14 @@ namespace JapPlatformBackend.Database.Configurations
     {
         public void Configure(EntityTypeBuilder<Lecture> builder)
         {
+
+            //modelBuilder.Entity<Lecture>()
+            //.Property(e => e.Urls)
+            //.HasConversion(
+            //    v => string.Join(',', v),
+            //    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+
+
             builder.HasData(
                 new Lecture
                 {

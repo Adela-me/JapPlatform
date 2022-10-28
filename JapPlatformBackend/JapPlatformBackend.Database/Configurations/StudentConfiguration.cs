@@ -29,7 +29,7 @@ namespace JapPlatformBackend.Database.Configurations
                     j => j
                         .HasOne(ips => ips.ItemProgram)
                         .WithMany(ip => ip.ItemProgramStudents)
-                        .HasForeignKey(ips => new { ips.ProgramId, ips.ItemId })
+                        .HasForeignKey(ips => ips.ItemProgramId)
                         .OnDelete(DeleteBehavior.ClientNoAction),
                     j => j
                         .HasOne(ips => ips.Student)
@@ -39,7 +39,7 @@ namespace JapPlatformBackend.Database.Configurations
                     {
                         j.Property(ips => ips.Progress).HasDefaultValue(0);
                         j.Property(ips => ips.ProgressStatus).HasDefaultValue(ProgressStatus.NotStarted);
-                        j.HasKey(ip => new { ip.ItemId, ip.ProgramId, ip.StudentId });
+                        j.HasKey(ip => new { ip.ItemProgramId, ip.StudentId });
                     }
                 );
 

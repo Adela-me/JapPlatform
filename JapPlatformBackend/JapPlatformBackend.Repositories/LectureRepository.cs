@@ -28,7 +28,7 @@ namespace JapPlatformBackend.Repositories
             if (lecture.WorkHours != updatedLecture.WorkHours)
             {
 
-                var studentIds = context.ItemProgramStudents.Where(ips => ips.ItemId == id).Select(ips => ips.StudentId).ToList();
+                var studentIds = context.ItemProgramStudents.Where(ips => ips.ItemProgram.ItemId == id).Select(ips => ips.StudentId).ToList();
                 var oldIPS = context.ItemProgramStudents.Where(ips => studentIds.Contains(ips.StudentId)).ToList();
                 context.ItemProgramStudents.RemoveRange(oldIPS);
                 lecture.WorkHours = updatedLecture.WorkHours;
@@ -36,11 +36,10 @@ namespace JapPlatformBackend.Repositories
 
                 var students = await context.Students
                 .Where(ips => studentIds.Contains(ips.Id))
-                .Include(p => p.ItemProgramStudents)
                 .Include(s => s.Selection)
                     .ThenInclude(s => s.Program)
                         .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
-                        .ThenInclude(ips => ips.Item)
+                            .ThenInclude(ips => ips.Item)
                 .ToListAsync();
 
                 var ips = Calc.SetItemsStartEndDates(students);

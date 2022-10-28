@@ -59,8 +59,7 @@ namespace JapPlatformBackend.Repositories
 
                 context.ItemProgramStudents.Add(new ItemProgramStudent
                 {
-                    ItemId = program.ItemPrograms[i].ItemId,
-                    ProgramId = program.ItemPrograms[i].ProgramId,
+                    ItemProgramId = program.ItemPrograms[i].Id,
                     StudentId = student.Id,
                     StartDate = startDate,
                     EndDate = endDate,
@@ -144,7 +143,6 @@ namespace JapPlatformBackend.Repositories
                 .Include(s => s.Selection)
                     .ThenInclude(s => s.Program)
                         .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
-                        .ThenInclude(p => p.ItemProgramStudents)
                             .ThenInclude(ips => ips.Item)
                 .ToListAsync();
 
