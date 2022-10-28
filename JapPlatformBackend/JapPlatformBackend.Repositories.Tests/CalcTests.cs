@@ -68,7 +68,6 @@ namespace JapPlatformBackend.Repositories
                 .Include(s => s.Selection)
                     .ThenInclude(s => s.Program)
                         .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
-                        .ThenInclude(p => p.ItemProgramStudents)
                             .ThenInclude(ips => ips.Item)
                 .ToListAsync();
             var selectionStart = new DateTime(2022, 09, 05);
@@ -93,7 +92,6 @@ namespace JapPlatformBackend.Repositories
                 .Include(s => s.Selection)
                     .ThenInclude(s => s.Program)
                         .ThenInclude(p => p.ItemPrograms.OrderBy(ip => ip.OrderNumber))
-                        .ThenInclude(p => p.ItemProgramStudents)
                             .ThenInclude(ips => ips.Item)
                 .ToListAsync();
             var selectionStart = new DateTime(2022, 09, 05);
