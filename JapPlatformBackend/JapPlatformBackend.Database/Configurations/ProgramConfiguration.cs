@@ -13,6 +13,25 @@ namespace JapPlatformBackend.Database.Configurations
                 .WithOne(s => s.Program)
                 .HasForeignKey(s => s.ProgramId);
 
+            builder
+                .HasMany(p => p.Items)
+                .WithMany(p => p.Programs)
+                .UsingEntity<ItemProgram>(
+                    j => j
+                        .HasOne(ip => ip.Item)
+                        .WithMany(i => i.ItemPrograms)
+                        .HasForeignKey(ip => ip.ItemId),
+                    j => j
+                        .HasOne(ip => ip.Program)
+                        .WithMany(p => p.ItemPrograms)
+                        .HasForeignKey(ip => ip.ProgramId),
+                    j =>
+                    {
+                        j.Property(ip => ip.OrderNumber).HasDefaultValue(0);
+                        j.HasIndex(ip => new { ip.ItemId, ip.ProgramId }).IsUnique();
+                        //          j.HasKey(ip => new { ip.ProgramId, ip.ItemId });
+                    });
+
             builder.HasData(
                 new Program
                 {

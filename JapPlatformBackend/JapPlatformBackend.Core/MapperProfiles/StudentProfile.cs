@@ -10,6 +10,13 @@ namespace JapPlatformBackend.Core.MapperProfiles
         public StudentProfile()
         {
             CreateMap<Student, GetStudentDto>().ReverseMap();
+            //.ForMember(dest => dest.Selection, opt => opt.MapFrom(src => src.Selection.Name))
+            //.ForMember(dest => dest.Program, opt => opt.MapFrom(src => src.Selection.Program.Name))
+
+            CreateMap<GetStudentDto, GetStudentProfileDto>()
+                .ForMember(dest => dest.PersonalProgram, opt => opt.MapFrom(src => src.ItemProgramStudents))
+                .ReverseMap();
+
             CreateMap<CreateStudentDto, Student>();
             CreateMap<UpdateStudentDto, Student>();
 
@@ -18,7 +25,7 @@ namespace JapPlatformBackend.Core.MapperProfiles
                 {
                     opt.MapFrom(src =>
                         src.Filter == "selection" ? "selection.name" :
-                        src.Filter == "program" ? "program.selection.name" :
+                        src.Filter == "program" ? "selection.program.name" :
                         src.Filter);
                 })
                 .ForMember(dest => dest.Sort, opt =>

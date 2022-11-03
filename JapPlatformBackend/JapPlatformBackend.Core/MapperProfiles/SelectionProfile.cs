@@ -10,7 +10,11 @@ namespace JapPlatformBackend.Core.MapperProfiles
         public SelectionProfile()
         {
             CreateMap<Selection, GetSelectionDto>().ReverseMap();
+
+            CreateMap<GetSelectionDto, GetReductedSelectionDto>().ReverseMap();
+
             CreateMap<Selection, CreateSelectionDto>().ReverseMap();
+
             CreateMap<UpdateSelectionDto, Selection>();
 
             CreateMap<SelectionSearchDto, BaseSearch>()

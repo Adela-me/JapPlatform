@@ -20,6 +20,11 @@ const SmNavbar = () => {
                 Programs
               </Nav.Link>
             </Link>
+            <Link to="/items">
+              <Nav.Link as="div" href="#items">
+                Program Items
+              </Nav.Link>
+            </Link>
             <Link to="/students">
               <Nav.Link as="div" href="#students">
                 Students

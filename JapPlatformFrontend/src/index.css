@@ -3,7 +3,7 @@ body {
   padding: 0;
   background-color: #ededed;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: visible;
 }
 
 a {
@@ -13,6 +13,14 @@ a {
 
 table {
   max-height: 60vh;
+}
+
+tr.Lecture {
+  background-color: #ebf3fb;
+}
+
+tr.Event {
+  background-color: rgb(250, 236, 238);
 }
 
 th {
@@ -81,11 +89,5 @@ textarea {
 @media screen and (min-width: 390px) {
   .pagination-resp {
     flex-direction: row;
-  }
-}
-
-@media screen and (max-width: 770px) {
-  body {
-    overflow-y: visible;
   }
 }

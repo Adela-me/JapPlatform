@@ -68,11 +68,12 @@ namespace JapPlatformBackend.Repositories
             return await query.Select(q => mapper.Map<TDto>(q)).ToListAsync();
 
         }
+
         public virtual async Task<TDto> Create(TInsert entity)
         {
             var insert = mapper.Map<TEntity>(entity);
 
-            context.Set<TEntity>().Add(insert as TEntity);
+            context.Set<TEntity>().Add(insert);
 
             await context.SaveChangesAsync();
 
@@ -114,9 +115,22 @@ namespace JapPlatformBackend.Repositories
 
         protected virtual void AddFilter(BaseSearch search, ref IQueryable<TEntity> query)
         {
+            var nonStringFields = "birthDate, workHours";
+
             if (!string.IsNullOrWhiteSpace(search.Filter) && !string.IsNullOrWhiteSpace(search.Value))
             {
-                query = query.Where(search.Filter + ".Contains(@0)", search.Value);
+                if (search.Filter == "status")
+                {
+                    query = query.Where(search.Filter + $"= \"{search.Value}\"");
+                }
+                else if (nonStringFields.Contains(search.Filter))
+                {
+                    query = query.Where(String.Format("{0}.ToString().Contains(@0)", search.Filter), search.Value);
+                }
+                else
+                {
+                    query = query.Where(search.Filter + ".Contains(@0)", search.Value);
+                };
             };
         }
 

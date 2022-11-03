@@ -5,6 +5,7 @@ using JapPlatformBackend.Core.Dtos.Student;
 using JapPlatformBackend.Core.Entities;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
+using JapPlatformBackend.Repositories.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 namespace JapPlatformBackend.Repositories
@@ -20,15 +21,17 @@ namespace JapPlatformBackend.Repositories
             this.mapper = mapper;
         }
 
-        public async Task<GetStudentDto> GetProfile(int studentId)
+        public override async Task<GetStudentDto> GetById(int id, string includes)
         {
             var student = await context.Students
-                .Include(s => s.Comments.OrderByDescending(c => c.CreatedAt))
+                .Include(s => s.Comments)
                     .ThenInclude(c => c.Author)
                 .Include(s => s.Selection)
                     .ThenInclude(s => s.Program)
-                .FirstOrDefaultAsync(s => s.Id == studentId)
-                ?? throw new ResourceNotFound("Student");
+                .Include(s => s.ItemProgramStudents.OrderBy(ips => ips.ItemProgram.OrderNumber))
+                    .ThenInclude(ips => ips.ItemProgram)
+                        .ThenInclude(ip => ip.Item)
+                .FirstOrDefaultAsync(s => s.Id == id);
 
             return mapper.Map<GetStudentDto>(student);
         }
@@ -48,6 +51,12 @@ namespace JapPlatformBackend.Repositories
             student = mapper.Map(updatedStudent, student);
 
             student.ModifiedAt = DateTime.Now;
+
+            var students = await Calc.PrepareStudent(context, id);
+
+            var ips = Calc.SetItemsStartEndDates(students);
+
+            context.ItemProgramStudents.AddRange(ips);
 
             await context.SaveChangesAsync();
 

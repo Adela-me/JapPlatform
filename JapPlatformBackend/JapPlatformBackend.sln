@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JapPlatformBackend.Database
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JapPlatformBackend.Services", "JapPlatformBackend.Services\JapPlatformBackend.Services.csproj", "{72C60B96-9A69-4051-9AD6-C9CFBA1402EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapPlatformBackend.Repositories", "JapPlatformBackend.Repositories\JapPlatformBackend.Repositories.csproj", "{F704ED99-A214-4F7E-B038-150E232B8A45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JapPlatformBackend.Repositories", "JapPlatformBackend.Repositories\JapPlatformBackend.Repositories.csproj", "{F704ED99-A214-4F7E-B038-150E232B8A45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JapPlatformBackend.Repositories.Tests", "JapPlatformBackend.Repositories.Tests\JapPlatformBackend.Repositories.Tests.csproj", "{2D0985D7-448E-4498-810B-A64B0D91D285}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{F704ED99-A214-4F7E-B038-150E232B8A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F704ED99-A214-4F7E-B038-150E232B8A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F704ED99-A214-4F7E-B038-150E232B8A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D0985D7-448E-4498-810B-A64B0D91D285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D0985D7-448E-4498-810B-A64B0D91D285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D0985D7-448E-4498-810B-A64B0D91D285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D0985D7-448E-4498-810B-A64B0D91D285}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

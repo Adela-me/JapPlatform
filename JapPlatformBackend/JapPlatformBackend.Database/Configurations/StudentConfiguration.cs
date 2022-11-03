@@ -22,6 +22,27 @@ namespace JapPlatformBackend.Database.Configurations
                 .WithOne(c => c.Student)
                 .HasForeignKey(s => s.StudentId);
 
+            builder
+                .HasMany(s => s.ItemPrograms)
+                .WithMany(s => s.Students)
+                .UsingEntity<ItemProgramStudent>(
+                    j => j
+                        .HasOne(ips => ips.ItemProgram)
+                        .WithMany(ip => ip.ItemProgramStudents)
+                        .HasForeignKey(ips => ips.ItemProgramId)
+                        .OnDelete(DeleteBehavior.ClientNoAction),
+                    j => j
+                        .HasOne(ips => ips.Student)
+                        .WithMany(s => s.ItemProgramStudents)
+                        .HasForeignKey(ips => ips.StudentId),
+                    j =>
+                    {
+                        j.Property(ips => ips.Progress).HasDefaultValue(0);
+                        j.Property(ips => ips.ProgressStatus).HasDefaultValue(ProgressStatus.NotStarted);
+                        j.HasKey(ip => new { ip.ItemProgramId, ip.StudentId });
+                    }
+                );
+
             var hashier = new PasswordHasher<User>();
 
             builder.HasData(

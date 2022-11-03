@@ -7,5 +7,7 @@ namespace JapPlatformBackend.Core.Interfaces
     {
         Task<ServiceResponse<GetReport>> GetReport();
 
+        Task SendEmailReport();
+
     }
 }

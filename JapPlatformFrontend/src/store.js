@@ -13,6 +13,8 @@ const initialState = {
 
   querySelections: "",
   queryStudents: "",
+
+  items: [],
 };
 
 let store = (set) => ({
@@ -28,6 +30,8 @@ let store = (set) => ({
 
   setQuerySelections: (query) => set(() => ({ query })),
   setQueryStudents: (query) => set(() => ({ query })),
+
+  setItems: (items) => set(() => ({ items })),
 
   reset: () => set(initialState),
 });

@@ -8,7 +8,7 @@ namespace JapPlatformBackend.Core.Interfaces
     {
         Task<PagedResponse<List<GetStudentDto>>> List(StudentSearchDto search);
         Task<ServiceResponse<GetStudentDto>> GetById(int id);
-        Task<ServiceResponse<GetStudentDto>> GetProfile();
+        Task<ServiceResponse<GetStudentProfileDto>> GetProfile();
         Task<ServiceResponse<GetStudentDto>> Create(CreateStudentDto newStudent);
         Task<ServiceResponse<GetStudentDto>> Update(int id, UpdateStudentDto updatedStudent);
         Task<ServiceResponse<List<GetStudentDto>>> Delete(int id);

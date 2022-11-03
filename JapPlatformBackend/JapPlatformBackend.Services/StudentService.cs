@@ -8,6 +8,7 @@ using JapPlatformBackend.Core.Entities;
 using JapPlatformBackend.Core.Interfaces;
 using JapPlatformBackend.Core.Interfaces.Repositories;
 using JapPlatformBackend.Database;
+using JapPlatformBackend.Repositories.Helpers;
 using JapPlatformBackend.Services.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -61,13 +62,21 @@ namespace JapPlatformBackend.Services
 
             await userManager.AddToRoleAsync(student, "Student");
 
-            var template = EmailHelpers.CreateTemplate(student.UserName, newStudent.Password);
-            var emailSent = await mailService.SendEmail(student.Email, EmailHelpers.Subject, template);
+            var template = EmailHelpers.CreateTemplateCredentials(student.UserName, newStudent.Password);
+            var emailSent = await mailService.SendEmail(student.Email, EmailHelpers.SubjectCredentials, template);
 
             if (!emailSent)
             {
                 throw new JapPlatformException("Student created, email was not sent");
             }
+
+            var students = await Calc.PrepareStudent(context, student.Id);
+
+            var ips = Calc.SetItemsStartEndDates(students);
+
+            context.ItemProgramStudents.AddRange(ips);
+
+            await context.SaveChangesAsync();
 
             var response = new ServiceResponse<GetStudentDto>
             {
@@ -90,7 +99,7 @@ namespace JapPlatformBackend.Services
 
         public async Task<ServiceResponse<GetStudentDto>> GetById(int id)
         {
-            var includes = "Comments.Author, Selection.Program";
+            var includes = "Comments.Author, Selection.Program, ItemProgramStudents.ItemProgram.Item";
 
             var response = new ServiceResponse<GetStudentDto>
             {
@@ -99,13 +108,17 @@ namespace JapPlatformBackend.Services
             return response;
         }
 
-        public async Task<ServiceResponse<GetStudentDto>> GetProfile()
+        public async Task<ServiceResponse<GetStudentProfileDto>> GetProfile()
         {
             int studentId = UserHelpers.GetLoggedInUserId(httpContextAccessor);
 
-            var response = new ServiceResponse<GetStudentDto>
+            var includes = "Comments.Author, Selection.Program, ItemProgramStudents.ItemProgram.Item";
+
+            var student = await studentRepository.GetById(studentId, includes);
+
+            var response = new ServiceResponse<GetStudentProfileDto>
             {
-                Data = await studentRepository.GetProfile(studentId)
+                Data = mapper.Map<GetStudentProfileDto>(student)
             };
             return response;
         }

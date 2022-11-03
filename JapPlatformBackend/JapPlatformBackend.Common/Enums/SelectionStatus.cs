@@ -3,6 +3,5 @@
     public enum SelectionStatus
     {
         Active, Complete
-
     }
 }

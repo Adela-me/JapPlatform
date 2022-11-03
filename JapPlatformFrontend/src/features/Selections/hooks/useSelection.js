@@ -31,6 +31,7 @@ export default function useSelection(selectionId) {
           id: selection.id,
           name: selection.name,
           startDate: dayjs(selection.startDate).format("YYYY-MM-DD"),
+          endDate: dayjs(selection.endDate).format("YYYY-MM-DD"),
           programId: selection?.program,
           status: selection.status,
           students: selection.students,

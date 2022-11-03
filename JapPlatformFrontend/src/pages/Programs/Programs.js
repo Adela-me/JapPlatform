@@ -1,20 +1,15 @@
-import { Col, Container, Row } from "react-bootstrap";
+import { Col } from "react-bootstrap";
 
 import ProgramsTable from "features/Programs/ProgramsTable";
+import TableWrapper from "components/Table/TableWrapper";
 
 const Programs = () => {
   return (
-    <Container
-      style={{ height: "100vh" }}
-      className="d-flex align-items-center"
-    >
-      <Row className=" w-100  justify-content-center">
-        <h1 className="text-center mb-4">Programs</h1>
-        <Col className="border rounded p-3 bg-light">
-          <ProgramsTable />
-        </Col>
-      </Row>
-    </Container>
+    <TableWrapper title="Programs">
+      <Col className="border rounded p-3 bg-light">
+        <ProgramsTable />
+      </Col>
+    </TableWrapper>
   );
 };
 

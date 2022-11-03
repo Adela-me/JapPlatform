@@ -35,6 +35,8 @@ namespace JapPlatformBackend.Services
                 ?? throw new UnauthenticatedException("User not authenticated.");
 
 
+
+
             var response = new ServiceResponse<GetCurrentUserDto>
             {
                 Data = mapper.Map<GetCurrentUserDto>(user)
